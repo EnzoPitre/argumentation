@@ -70,6 +70,12 @@
             font-weight: bold;
             margin-right: 8px;
         }
+
+        /* Styles spécifiques Objections */
+        .objection-card { transition: all 0.2s ease-in-out; }
+        .objection-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .response-box { border-left: 4px solid #2563eb; }
+        .theme-filter-btn.active { background-color: #1e293b; color: white; border-color: #1e293b; }
     </style>
 </head>
 <body class="text-slate-900 h-screen flex overflow-hidden">
@@ -86,7 +92,7 @@
             </div>
         </div>
 
-        <div class="p-6 overflow-y-auto">
+        <div class="p-6 overflow-y-auto custom-scrollbar">
             <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Menu Principal</div>
             <nav class="space-y-3">
                 <button onclick="switchView('discovery')" id="nav-discovery" class="nav-item w-full flex items-center gap-4 px-4 py-4 text-sm font-bold text-slate-300 rounded-r-lg hover:bg-slate-800 hover:text-white text-left group transition-all active">
@@ -96,6 +102,17 @@
                     <div>
                         <span class="block text-base">Guide d'Entretien</span>
                         <span class="text-[10px] font-normal text-slate-500 block group-hover:text-slate-300">Script de Découverte</span>
+                    </div>
+                </button>
+
+                <!-- NEW BUTTON OBJECTIONS -->
+                <button onclick="switchView('objections')" id="nav-objections" class="nav-item w-full flex items-center gap-4 px-4 py-4 text-sm font-bold text-slate-300 rounded-r-lg hover:bg-slate-800 hover:text-white text-left group transition-all">
+                    <div class="bg-slate-800 p-2.5 rounded-lg group-hover:bg-red-600 transition-colors">
+                        <i data-lucide="message-square-warning" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="block text-base">Argumentaire (Obj.)</span>
+                        <span class="text-[10px] font-normal text-slate-500 block group-hover:text-slate-300">Base de Réponses (30)</span>
                     </div>
                 </button>
                 
@@ -144,7 +161,7 @@
         <div class="mt-auto p-6 bg-slate-950 border-t border-slate-800">
             <div class="flex items-center gap-3">
                 <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                <p class="text-xs text-slate-400 font-medium">Base v6.2 - Prêt</p>
+                <p class="text-xs text-slate-400 font-medium">Base v6.3 - Prêt</p>
             </div>
         </div>
     </aside>
@@ -173,10 +190,10 @@
         </header>
 
         <!-- MAIN SCROLL AREA -->
-        <main class="flex-grow overflow-y-auto custom-scrollbar p-8 relative">
+        <main class="flex-grow overflow-y-auto custom-scrollbar p-0 relative">
             
             <!-- VIEW 1: DISCOVERY (GUIDE) -->
-            <div id="view-discovery" class="max-w-5xl mx-auto pb-32 fade-in">
+            <div id="view-discovery" class="max-w-5xl mx-auto pb-32 p-8 fade-in">
                 
                 <div class="bg-white rounded-2xl p-8 mb-8 shadow-sm border-l-8 border-red-600 relative overflow-hidden">
                     <div class="relative z-10">
@@ -190,8 +207,49 @@
                 </div>
             </div>
 
-            <!-- VIEW 2: CATALOG -->
-            <div id="view-catalog" class="hidden fade-in pb-20">
+            <!-- VIEW 2: OBJECTIONS (NOUVELLE PAGE) -->
+            <div id="view-objections" class="hidden fade-in h-full flex flex-col">
+                <!-- Filters & Search Toolbar (Sticky) -->
+                <div class="bg-white border-b border-slate-200 p-6 sticky top-0 z-10 shadow-sm">
+                    <div class="max-w-5xl mx-auto space-y-4">
+                        <!-- Search -->
+                        <div class="relative">
+                            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5"></i>
+                            <input type="text" id="objectionSearchInput" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-inner text-sm font-medium" placeholder="Rechercher une objection (ex: 'cher', 'MDD', 'transport', 'concurrent')...">
+                        </div>
+                        
+                        <!-- Filters -->
+                        <div class="flex flex-wrap gap-2" id="objection-filters-container">
+                            <button onclick="filterObjections('all')" class="theme-filter-btn active px-4 py-2 rounded-full text-xs font-bold border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2" id="filter-all">
+                                Tout voir
+                            </button>
+                            <button onclick="filterObjections('PRIX & RENTABILITÉ')" class="theme-filter-btn px-4 py-2 rounded-full text-xs font-bold border border-green-200 bg-green-50 text-green-700 hover:bg-green-100 transition-all flex items-center gap-2" id="filter-prix">
+                                <i data-lucide="euro" class="w-3 h-3"></i> Prix & Rentabilité
+                            </button>
+                            <button onclick="filterObjections('PRODUIT & TECHNIQUE')" class="theme-filter-btn px-4 py-2 rounded-full text-xs font-bold border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-all flex items-center gap-2" id="filter-tech">
+                                <i data-lucide="flask-conical" class="w-3 h-3"></i> Produit & Technique
+                            </button>
+                            <button onclick="filterObjections('LOGISTIQUE & APPROVISIONNEMENT')" class="theme-filter-btn px-4 py-2 rounded-full text-xs font-bold border border-orange-200 bg-orange-50 text-orange-700 hover:bg-orange-100 transition-all flex items-center gap-2" id="filter-log">
+                                <i data-lucide="truck" class="w-3 h-3"></i> Logistique
+                            </button>
+                            <button onclick="filterObjections('MARQUE & MARKETING')" class="theme-filter-btn px-4 py-2 rounded-full text-xs font-bold border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100 transition-all flex items-center gap-2" id="filter-mark">
+                                <i data-lucide="megaphone" class="w-3 h-3"></i> Marketing
+                            </button>
+                            <button onclick="filterObjections('STRATÉGIE & CONCURRENCE')" class="theme-filter-btn px-4 py-2 rounded-full text-xs font-bold border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 transition-all flex items-center gap-2" id="filter-strat">
+                                <i data-lucide="swords" class="w-3 h-3"></i> Stratégie
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Objections List -->
+                <div id="objectionsList" class="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-8 space-y-4 max-w-5xl mx-auto w-full pb-32">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <!-- VIEW 3: CATALOG -->
+            <div id="view-catalog" class="hidden fade-in pb-20 p-8">
                 
                 <!-- Filters -->
                 <div class="mb-8 sticky top-0 z-30 bg-slate-50/95 backdrop-blur py-4 border-b border-slate-200 -mx-8 px-8 shadow-sm">
@@ -213,8 +271,8 @@
                 </div>
             </div>
 
-            <!-- VIEW 3: PRICES -->
-            <div id="view-prices" class="hidden fade-in pb-20">
+            <!-- VIEW 4: PRICES -->
+            <div id="view-prices" class="hidden fade-in pb-20 p-8">
                 <div class="max-w-5xl mx-auto">
                     <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
                         <div class="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
@@ -246,8 +304,8 @@
                 </div>
             </div>
 
-            <!-- VIEW 4: QUOTE GENERATOR -->
-            <div id="view-quote" class="hidden fade-in pb-20">
+            <!-- VIEW 5: QUOTE GENERATOR -->
+            <div id="view-quote" class="hidden fade-in pb-20 p-8">
                 <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
                     
                     <!-- Selector Column -->
@@ -350,8 +408,8 @@
                 </div>
             </div>
 
-            <!-- VIEW 5: HISTORY (NEW) -->
-            <div id="view-history" class="hidden fade-in pb-20">
+            <!-- VIEW 6: HISTORY -->
+            <div id="view-history" class="hidden fade-in pb-20 p-8">
                 <div class="max-w-4xl mx-auto space-y-8">
                     <!-- Header Image/Card -->
                     <div class="bg-white rounded-2xl p-8 shadow-sm border-l-8 border-slate-900 relative overflow-hidden">
@@ -416,7 +474,7 @@
 
     <!-- SCRIPT -->
     <script>
-        // --- DONNÉES PRIX (NEW) ---
+        // --- DONNÉES PRIX ---
         const priceListItems = [
             { name: "DEGRIPPANT RELAXEX", pu: "1,85 €", p6: "11,10 €", pack: 12 },
             { name: "TX-2-DIELECTRIQUE", pu: "2,19 €", p6: "13,14 €", pack: 12 },
@@ -823,6 +881,199 @@
             }
         ];
 
+        // --- DONNÉES OBJECTIONS (NOUVEAU) ---
+        const objectionsData = [
+            // THÈME 1 : PRIX & RENTABILITÉ
+            {
+                id: 1,
+                theme: "PRIX & RENTABILITÉ",
+                question: "Vous êtes plus cher que ma Marque de Distributeur (MDD).",
+                response: "C'est normal. Votre MDD couvre l'entrée de gamme. Nous apportons la technicité (Zinc 98%, Haute Température) que vous ne pouvez pas fabriquer en gros volume. Nous sommes le produit 'Premium' qui valorise votre rayon."
+            },
+            {
+                id: 2,
+                theme: "PRIX & RENTABILITÉ",
+                question: "Je n'ai pas assez de marge sur votre Zinc à 2,90 €.",
+                response: "Faisons le calcul. Prix de vente marché : 13 € TTC. Prix d'achat : 2,90 €. Vous faites 73% de marge. C'est probablement l'un des produits les plus rentables de votre rayon."
+            },
+            {
+                id: 3,
+                theme: "PRIX & RENTABILITÉ",
+                question: "Je veux une remise supplémentaire de 10% pour référencer la gamme.",
+                response: "Je vous propose déjà un prix 'Direct Usine' sans intermédiaire. Je ne peux pas baisser le net sans toucher à la qualité. Par contre, je peux déclencher une RFA (Remise de Fin d'Année) de 2% si on atteint les objectifs de volume."
+            },
+            {
+                id: 4,
+                theme: "PRIX & RENTABILITÉ",
+                question: "Vos concurrents me paient l'implantation (droits d'entrée).",
+                response: "Nous ne croyons pas aux chèques en blanc, mais au partenariat. Nous investissons ce budget dans la qualité produit et le stock pour vous livrer vite (Franco 400€), ce qui est plus rentable pour vous au quotidien."
+            },
+            {
+                id: 5,
+                theme: "PRIX & RENTABILITÉ",
+                question: "Le prix du transport depuis l'Espagne va tuer ma marge.",
+                response: "Absolument pas. Le transport est inclus dans notre tarif dès 400 € de commande (Franco). C'est transparent pour vous."
+            },
+            {
+                id: 6,
+                theme: "PRIX & RENTABILITÉ",
+                question: "Pourquoi votre peinture Déco est à 2,20€ ? C'est louche.",
+                response: "C'est le prix de la maîtrise industrielle. Nous fabriquons nos résines. C'est la même qualité qu'une bombe à 8€, mais vous ne payez pas la marque ni la pub TV."
+            },
+
+            // THÈME 2 : PRODUIT & TECHNIQUE
+            {
+                id: 7,
+                theme: "PRODUIT & TECHNIQUE",
+                question: "Le Zinc en bombe, c'est juste de la peinture grise, ça ne protège pas.",
+                response: "Faux chez nous. Notre Zinc Mat contient 98% de Zinc pur dans le film sec. C'est une véritable protection cathodique (anode sacrificielle) : même rayé, le métal ne rouille pas."
+            },
+            {
+                id: 8,
+                theme: "PRODUIT & TECHNIQUE",
+                question: "J'ai peur que les buses se bouchent, c'est le problème n°1.",
+                response: "Nous utilisons des valves autonettoyantes de dernière génération sur toute la gamme. Le taux de retour SAV pour bouchage est inférieur à 0,1%."
+            },
+            {
+                id: 9,
+                theme: "PRODUIT & TECHNIQUE",
+                question: "Votre peinture Haute Température, elle tient vraiment ?",
+                response: "Elle est certifiée pour résister à 600°C en continu. C'est indispensable pour la sécurité sur des poêles ou des échappements. Une peinture classique prendrait feu ou pèlerait."
+            },
+            {
+                id: 10,
+                theme: "PRODUIT & TECHNIQUE",
+                question: "Le 85 GLADIO, c'est juste de l'eau de Javel reconditionnée.",
+                response: "Non, c'est une formule professionnelle stabilisée avec des tensioactifs pénétrants. La Javel blanchit la surface ; le Gladio tue la racine du champignon dans le support."
+            },
+            {
+                id: 11,
+                theme: "PRODUIT & TECHNIQUE",
+                question: "Vos bombes de peinture auto, la couleur ne correspond jamais.",
+                response: "Sur nos gammes RAL et Agricoles, nous respectons scrupuleusement le code colorimétrique industriel (ex: Vert John Deere). La teinte est garantie conforme à l'origine."
+            },
+            {
+                id: 12,
+                theme: "PRODUIT & TECHNIQUE",
+                question: "Est-ce que vos peintures couvrent bien ?",
+                response: "Ce sont des formules 'High Solid' (Haut Extrait Sec). Une seule couche de notre Déco suffit là où il en faut deux chez les concurrents 'premier prix'."
+            },
+            {
+                id: 13,
+                theme: "PRODUIT & TECHNIQUE",
+                question: "Vos produits sentent fort, mes clients n'aiment pas ça.",
+                response: "Nous respectons strictement la réglementation sur les COV. De plus, nos produits sont étiquetés A+ (très faibles émissions dans l'air intérieur), ce qui est rassurant pour l'usage domestique."
+            },
+
+            // THÈME 3 : LOGISTIQUE & APPROVISIONNEMENT
+            {
+                id: 14,
+                theme: "LOGISTIQUE & APPROVISIONNEMENT",
+                question: "L'Espagne, c'est trop loin, vous ne livrerez jamais à temps.",
+                response: "Notre usine d'Hernani est à la frontière, à 20 min de la France. Nous livrons en J+4 partout en France, souvent plus vite qu'un fournisseur basé à Paris ou Lyon."
+            },
+            {
+                id: 15,
+                theme: "LOGISTIQUE & APPROVISIONNEMENT",
+                question: "Je ne peux pas stocker des palettes entières.",
+                response: "Justement ! Notre Franco est à 400 €. Vous pouvez commander seulement quelques cartons panachés. C'est idéal pour le zéro stock."
+            },
+            {
+                id: 16,
+                theme: "LOGISTIQUE & APPROVISIONNEMENT",
+                question: "Vos cartons de 12, c'est trop gros pour mes petits magasins.",
+                response: "Sur les produits à rotation plus lente (comme les teintes agricoles ou les effets spéciaux), nous sommes en colisage de 6. C'est très facile à écouler."
+            },
+            {
+                id: 17,
+                theme: "LOGISTIQUE & APPROVISIONNEMENT",
+                question: "Que se passe-t-il en cas de rupture de stock chez vous ?",
+                response: "En tant que fabricant, nous avons le stock de matières premières. Nous ne sommes pas dépendants d'un container qui arrive de Chine. Nous avons la main sur la production."
+            },
+            {
+                id: 18,
+                theme: "LOGISTIQUE & APPROVISIONNEMENT",
+                question: "Acceptez-vous de reprendre les invendus ?",
+                response: "Pour la commande d'implantation, oui. Si au bout de 6 mois une référence ne tourne pas, on l'échange contre une référence qui cartonne (le 1 pour 1)."
+            },
+
+            // THÈME 4 : MARQUE & MARKETING
+            {
+                id: 19,
+                theme: "MARQUE & MARKETING",
+                question: "Personne ne connait la marque FM Spray.",
+                response: "C'est une opportunité. Vos clients ne peuvent pas comparer nos prix sur Amazon. C'est un produit exclusif pour votre enseigne qui fidélise vos clients."
+            },
+            {
+                id: 20,
+                theme: "MARQUE & MARKETING",
+                question: "Vos packagings font 'vieux' ou 'industriel'.",
+                response: "C'est un choix. Ça fait 'Produit Pro'. Le bricoleur fait plus confiance à un packaging technique qu'à un packaging trop marketing qui cache souvent un produit médiocre."
+            },
+            {
+                id: 21,
+                theme: "MARQUE & MARKETING",
+                question: "Tout est écrit en espagnol sur la bombe ?",
+                response: "Non, regardez l'échantillon. Toutes les mentions légales, de sécurité et d'utilisation sont en Français, Espagnol, Anglais et Portugais. C'est 100% conforme."
+            },
+            {
+                id: 22,
+                theme: "MARQUE & MARKETING",
+                question: "Je n'ai pas de place en rayon.",
+                response: "Faisons le ménage. Enlevez les 3 références concurrentes qui tournent le moins et mettez notre Zinc et notre Gladio à la place. Votre rentabilité au mètre linéaire va augmenter."
+            },
+            {
+                id: 23,
+                theme: "MARQUE & MARKETING",
+                question: "Allez-vous faire de la pub TV pour nous aider à vendre ?",
+                response: "Non, car cela augmenterait le prix d'achat. Nous préférons vous donner ce budget sous forme de prix bas (2,20€) pour que vous soyez compétitifs face à Action."
+            },
+
+            // THÈME 5 : STRATÉGIE & CONCURRENCE
+            {
+                id: 24,
+                theme: "STRATÉGIE & CONCURRENCE",
+                question: "J'ai déjà Julien et Rust-Oleum, je suis complet.",
+                response: "Ils sont très bien, mais chers. Nous sommes le maillon manquant : la qualité industrielle au prix d'un produit d'appel. Nous complétons l'offre par le bas du prix, sans baisser la qualité."
+            },
+            {
+                id: 25,
+                theme: "STRATÉGIE & CONCURRENCE",
+                question: "Action vend de la peinture à 2,50€, vous ne ferez pas le poids.",
+                response: "Avec nous, vous achetez la Déco à 2,20€. Vous pouvez la vendre à 3,90€ ou 4,50€. Vous restez plus cher qu'Action, mais vous vendez une qualité acrylique bien supérieure et le conseil en plus."
+            },
+            {
+                id: 26,
+                theme: "STRATÉGIE & CONCURRENCE",
+                question: "Je ne veux pas multiplier les fournisseurs (Rationalisation).",
+                response: "Je comprends. Mais avec notre gamme de 50 produits (Auto, Déco, Bati), nous pouvons remplacer 2 ou 3 petits fournisseurs de niche. Nous sommes un généraliste de l'aérosol."
+            },
+            {
+                id: 27,
+                theme: "STRATÉGIE & CONCURRENCE",
+                question: "Vos produits agricole, c'est une niche trop petite.",
+                response: "C'est une niche captive. L'agriculteur qui cherche son 'Vert John Deere' ne l'achètera que s'il le trouve. Si vous l'avez, il achète aussi ses outils chez vous. C'est un produit d'attraction."
+            },
+            {
+                id: 28,
+                theme: "STRATÉGIE & CONCURRENCE",
+                question: "Je travaille uniquement avec des marques françaises.",
+                response: "Nous sommes européens, voisins, et nous respectons toutes les normes françaises (A+). De plus, notre flexibilité (Franco 400€) est meilleure que bien des français."
+            },
+            {
+                id: 29,
+                theme: "STRATÉGIE & CONCURRENCE",
+                question: "Le marché du bricolage baisse, je ne prends pas de risque.",
+                response: "Justement, en période de crise, les gens réparent au lieu de jeter. Nos peintures 'Rénovation' (Électroménager, Radiateurs) sont les produits anti-crise par excellence."
+            },
+            {
+                id: 30,
+                theme: "STRATÉGIE & CONCURRENCE",
+                question: "Je ne signe rien aujourd'hui.",
+                response: "Pas de problème. Signons juste pour un test sur vos 20 plus gros magasins. Le risque est nul, et on fait le bilan dans 3 mois. Ça vous va ?"
+            }
+        ];
+
         // --- MAPPING UNIVERS ---
         const universMap = {
             1: { label: "Décoration & Maison", icon: "brush", color: "text-purple-600 bg-purple-50" },
@@ -836,17 +1087,21 @@
         let activeUnivers = 0;
         let searchTerm = "";
         let quoteItems = [];
+        let currentObjectionFilter = 'all';
+        let objectionSearchQuery = '';
 
         function switchView(viewName) {
             currentView = viewName;
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById(`nav-${viewName}`).classList.add('active');
+            const activeNav = document.getElementById(`nav-${viewName}`);
+            if(activeNav) activeNav.classList.add('active');
             
             document.getElementById('view-discovery').classList.add('hidden');
             document.getElementById('view-catalog').classList.add('hidden');
             document.getElementById('view-prices').classList.add('hidden');
             document.getElementById('view-quote').classList.add('hidden');
             document.getElementById('view-history').classList.add('hidden');
+            document.getElementById('view-objections').classList.add('hidden');
             
             document.getElementById(`view-${viewName}`).classList.remove('hidden');
 
@@ -870,7 +1125,11 @@
                 searchContainer.classList.add('invisible');
                 document.getElementById('page-title').innerText = "Histoire de l'Entreprise";
                 document.getElementById('page-subtitle').innerText = "Présentation & Valeurs";
-                lucide.createIcons(); // Refresh icons for new content
+            } else if (viewName === 'objections') {
+                searchContainer.classList.add('invisible');
+                document.getElementById('page-title').innerText = "Traitement des Objections";
+                document.getElementById('page-subtitle').innerText = "Base de données : 30 scénarios";
+                renderObjectionsList();
             } else {
                 searchContainer.classList.remove('invisible');
                 document.getElementById('page-title').innerText = "Catalogue Produits";
@@ -878,7 +1137,131 @@
                 renderFilters();
                 renderProducts();
             }
+            lucide.createIcons();
         }
+
+        // --- OBJECTIONS LOGIC (NEW) ---
+        function getThemeColor(theme) {
+            switch(theme) {
+                case 'PRIX & RENTABILITÉ': return 'bg-green-100 text-green-800 border-green-200';
+                case 'PRODUIT & TECHNIQUE': return 'bg-blue-100 text-blue-800 border-blue-200';
+                case 'LOGISTIQUE & APPROVISIONNEMENT': return 'bg-orange-100 text-orange-800 border-orange-200';
+                case 'MARQUE & MARKETING': return 'bg-purple-100 text-purple-800 border-purple-200';
+                case 'STRATÉGIE & CONCURRENCE': return 'bg-red-100 text-red-800 border-red-200';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        function getThemeIcon(theme) {
+            switch(theme) {
+                case 'PRIX & RENTABILITÉ': return 'euro';
+                case 'PRODUIT & TECHNIQUE': return 'flask-conical';
+                case 'LOGISTIQUE & APPROVISIONNEMENT': return 'truck';
+                case 'MARQUE & MARKETING': return 'megaphone';
+                case 'STRATÉGIE & CONCURRENCE': return 'swords';
+                default: return 'message-square';
+            }
+        }
+
+        function toggleAnswer(id) {
+            const answerDiv = document.getElementById(`answer-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            const card = document.getElementById(`card-${id}`);
+
+            if (answerDiv.classList.contains('hidden')) {
+                answerDiv.classList.remove('hidden');
+                // Lucide icons are SVGs replaced by JS, so we toggle classes on parent or re-render icon, 
+                // but since Lucide replaces the <i> tag, we check the inner content or class.
+                // Simple toggle logic for Lucide:
+                icon.innerHTML = ''; // Clear SVG
+                icon.setAttribute('data-lucide', 'minus');
+                card.classList.add('ring-2', 'ring-blue-500');
+            } else {
+                answerDiv.classList.add('hidden');
+                icon.innerHTML = ''; // Clear SVG
+                icon.setAttribute('data-lucide', 'plus');
+                card.classList.remove('ring-2', 'ring-blue-500');
+            }
+            lucide.createIcons();
+        }
+
+        function renderObjectionsList() {
+            const listContainer = document.getElementById('objectionsList');
+            listContainer.innerHTML = '';
+            
+            const filteredData = objectionsData.filter(item => {
+                const matchesTheme = currentObjectionFilter === 'all' || item.theme === currentObjectionFilter;
+                const matchesSearch = item.question.toLowerCase().includes(objectionSearchQuery.toLowerCase()) || 
+                                      item.response.toLowerCase().includes(objectionSearchQuery.toLowerCase()) ||
+                                      item.theme.toLowerCase().includes(objectionSearchQuery.toLowerCase());
+                return matchesTheme && matchesSearch;
+            });
+
+            if (filteredData.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-10 text-gray-500">
+                        <i data-lucide="search-x" class="w-12 h-12 mx-auto mb-3 opacity-20"></i>
+                        <p>Aucune objection trouvée pour cette recherche.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            filteredData.forEach(item => {
+                const themeClass = getThemeColor(item.theme);
+                const themeIcon = getThemeIcon(item.theme);
+
+                const cardHTML = `
+                    <div id="card-${item.id}" class="objection-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer group" onclick="toggleAnswer(${item.id})">
+                        <div class="p-5">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="flex-1">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide ${themeClass} mb-2">
+                                        <i data-lucide="${themeIcon}" class="w-3 h-3"></i> ${item.theme}
+                                    </span>
+                                    <h3 class="text-lg font-bold text-slate-800 leading-tight group-hover:text-blue-600 transition-colors">"${item.question}"</h3>
+                                </div>
+                                <div class="text-gray-400 hover:text-blue-500 transition-colors mt-1 bg-slate-50 p-2 rounded-full">
+                                    <i id="icon-${item.id}" data-lucide="plus" class="w-5 h-5"></i>
+                                </div>
+                            </div>
+                            
+                            <div id="answer-${item.id}" class="hidden mt-4 pt-4 border-t border-gray-100 animate-fade-in">
+                                <div class="response-box bg-blue-50 p-6 rounded-r-xl text-slate-700 leading-relaxed text-base shadow-inner">
+                                    <span class="font-bold text-blue-700 block mb-2 text-xs uppercase tracking-widest flex items-center gap-2"><i data-lucide="message-circle" class="w-4 h-4"></i> Réponse suggérée :</span>
+                                    ${item.response}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                listContainer.insertAdjacentHTML('beforeend', cardHTML);
+            });
+            lucide.createIcons();
+        }
+
+        function filterObjections(theme) {
+            currentObjectionFilter = theme;
+            
+            document.querySelectorAll('.theme-filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'ring-2', 'ring-offset-2', 'ring-slate-400');
+                if(btn.id === 'filter-all' && theme === 'all') btn.classList.add('active', 'ring-2', 'ring-offset-2', 'ring-slate-400');
+                if(btn.id === 'filter-prix' && theme === 'PRIX & RENTABILITÉ') btn.classList.add('active', 'ring-2', 'ring-offset-2', 'ring-green-400');
+                if(btn.id === 'filter-tech' && theme === 'PRODUIT & TECHNIQUE') btn.classList.add('active', 'ring-2', 'ring-offset-2', 'ring-blue-400');
+                if(btn.id === 'filter-log' && theme === 'LOGISTIQUE & APPROVISIONNEMENT') btn.classList.add('active', 'ring-2', 'ring-offset-2', 'ring-orange-400');
+                if(btn.id === 'filter-mark' && theme === 'MARQUE & MARKETING') btn.classList.add('active', 'ring-2', 'ring-offset-2', 'ring-purple-400');
+                if(btn.id === 'filter-strat' && theme === 'STRATÉGIE & CONCURRENCE') btn.classList.add('active', 'ring-2', 'ring-offset-2', 'ring-red-400');
+            });
+
+            renderObjectionsList();
+        }
+
+        document.getElementById('objectionSearchInput').addEventListener('input', (e) => {
+            objectionSearchQuery = e.target.value;
+            renderObjectionsList();
+        });
+
 
         // --- VIEW: DISCOVERY (STATIC) ---
         function renderDiscovery() {
