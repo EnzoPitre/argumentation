@@ -109,6 +109,16 @@
                     </div>
                 </button>
 
+                <button onclick="switchView('prices')" id="nav-prices" class="nav-item w-full flex items-center gap-4 px-4 py-4 text-sm font-bold text-slate-300 rounded-r-lg hover:bg-slate-800 hover:text-white text-left group transition-all">
+                    <div class="bg-slate-800 p-2.5 rounded-lg group-hover:bg-red-600 transition-colors">
+                        <i data-lucide="tag" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="block text-base">Tarifs & Cond.</span>
+                        <span class="text-[10px] font-normal text-slate-500 block group-hover:text-slate-300">Grille Tarifaire</span>
+                    </div>
+                </button>
+
                 <button onclick="switchView('quote')" id="nav-quote" class="nav-item w-full flex items-center gap-4 px-4 py-4 text-sm font-bold text-slate-300 rounded-r-lg hover:bg-slate-800 hover:text-white text-left group transition-all">
                     <div class="bg-slate-800 p-2.5 rounded-lg group-hover:bg-red-600 transition-colors">
                         <i data-lucide="calculator" class="w-5 h-5"></i>
@@ -118,13 +128,23 @@
                         <span class="text-[10px] font-normal text-slate-500 block group-hover:text-slate-300">Chiffrage Rapide</span>
                     </div>
                 </button>
+
+                <button onclick="switchView('history')" id="nav-history" class="nav-item w-full flex items-center gap-4 px-4 py-4 text-sm font-bold text-slate-300 rounded-r-lg hover:bg-slate-800 hover:text-white text-left group transition-all">
+                    <div class="bg-slate-800 p-2.5 rounded-lg group-hover:bg-red-600 transition-colors">
+                        <i data-lucide="landmark" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="block text-base">L'Entreprise</span>
+                        <span class="text-[10px] font-normal text-slate-500 block group-hover:text-slate-300">Histoire & Valeurs</span>
+                    </div>
+                </button>
             </nav>
         </div>
 
         <div class="mt-auto p-6 bg-slate-950 border-t border-slate-800">
             <div class="flex items-center gap-3">
                 <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                <p class="text-xs text-slate-400 font-medium">Base v6.0 - Prêt</p>
+                <p class="text-xs text-slate-400 font-medium">Base v6.2 - Prêt</p>
             </div>
         </div>
     </aside>
@@ -193,7 +213,40 @@
                 </div>
             </div>
 
-            <!-- VIEW 3: QUOTE GENERATOR -->
+            <!-- VIEW 3: PRICES -->
+            <div id="view-prices" class="hidden fade-in pb-20">
+                <div class="max-w-5xl mx-auto">
+                    <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                            <div>
+                                <h3 class="text-xl font-condensed font-bold text-slate-800">Grille Tarifaire Produits</h3>
+                                <p class="text-xs text-slate-500">Mise à jour 2024 - Tarifs Publics HT</p>
+                            </div>
+                            <div class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full border border-blue-200">
+                                Prix Fixes
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-slate-100 text-slate-500 uppercase font-bold text-xs sticky top-0 z-10">
+                                    <tr>
+                                        <th class="px-6 py-4">Produit</th>
+                                        <th class="px-6 py-4 text-right">Prix Unitaire (P.U.)</th>
+                                        <th class="px-6 py-4 text-right">Prix pour 6 unités</th>
+                                        <th class="px-6 py-4 text-center">Colisage Réel</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="prices-table-body" class="divide-y divide-slate-100">
+                                    <!-- Rows injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 4: QUOTE GENERATOR -->
             <div id="view-quote" class="hidden fade-in pb-20">
                 <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
                     
@@ -297,11 +350,112 @@
                 </div>
             </div>
 
+            <!-- VIEW 5: HISTORY (NEW) -->
+            <div id="view-history" class="hidden fade-in pb-20">
+                <div class="max-w-4xl mx-auto space-y-8">
+                    <!-- Header Image/Card -->
+                    <div class="bg-white rounded-2xl p-8 shadow-sm border-l-8 border-slate-900 relative overflow-hidden">
+                        <h2 class="text-3xl font-condensed font-black text-slate-900 mb-3">🏭 Présentation de l'Entreprise FM Spray</h2>
+                        <p class="text-slate-600 text-lg">L'entreprise FM Spray est un fabricant espagnol spécialisé dans la production d'une gamme complète d'aérosols pour les professionnels (peinture, réparation, maintenance technique).</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- I. Localisation -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="p-2 bg-red-100 text-red-600 rounded-lg"><i data-lucide="map-pin" class="w-6 h-6"></i></div>
+                                <h3 class="text-xl font-condensed font-bold text-slate-800">I. Localisation & Histoire</h3>
+                            </div>
+                            <ul class="space-y-3 text-sm text-slate-600">
+                                <li><strong class="text-slate-900">Localisation :</strong> Basée à Hernani (Pays Basque), à côté de Saint-Sébastien. Proximité immédiate avec la frontière française.</li>
+                                <li><strong class="text-slate-900">Fabricant Historique :</strong> Production depuis 1972. Plus de 50 ans d'expérience.</li>
+                                <li><strong class="text-slate-900">Mission :</strong> Fournir des solutions techniques performantes avec une qualité maximale et un service client B2B optimal.</li>
+                            </ul>
+                        </div>
+
+                        <!-- II. Expertise -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="p-2 bg-blue-100 text-blue-600 rounded-lg"><i data-lucide="flask-conical" class="w-6 h-6"></i></div>
+                                <h3 class="text-xl font-condensed font-bold text-slate-800">II. Expertise & Gammes</h3>
+                            </div>
+                            <p class="text-sm text-slate-600 mb-3">Solutions rapides pour l'industrie, l'auto, l'artisanat et la maintenance.</p>
+                            <ul class="space-y-3 text-sm text-slate-600">
+                                <li><strong class="text-slate-900">Expertise Couleur :</strong> Couleurs d'origine (Auto/Agri) et respect de la norme RAL (+100 teintes).</li>
+                                <li><strong class="text-slate-900">Portfolio Large :</strong> Finition (RAL, Déco), Protection (Zinc, Inox, HT) et Réparation (Mastics, Résines).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- III. Qualité -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2 bg-green-100 text-green-600 rounded-lg"><i data-lucide="leaf" class="w-6 h-6"></i></div>
+                            <h3 class="text-xl font-condensed font-bold text-slate-800">III. Qualité & Engagement Environnemental</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="text-center p-4 bg-slate-50 rounded-lg">
+                                <div class="font-black text-slate-900 mb-1">ISO 9001:2015</div>
+                                <p class="text-xs text-slate-500">Certification Qualité du processus de fabrication.</p>
+                            </div>
+                            <div class="text-center p-4 bg-slate-50 rounded-lg">
+                                <div class="font-black text-green-600 mb-1">A+ (Air Intérieur)</div>
+                                <p class="text-xs text-slate-500">Émissions de COV "pratiquement nulles" pour la décoration.</p>
+                            </div>
+                            <div class="text-center p-4 bg-slate-50 rounded-lg">
+                                <div class="font-black text-slate-900 mb-1">ECOEMBES</div>
+                                <p class="text-xs text-slate-500">Engagement dans l'économie circulaire et durable.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
     <!-- SCRIPT -->
     <script>
+        // --- DONNÉES PRIX (NEW) ---
+        const priceListItems = [
+            { name: "DEGRIPPANT RELAXEX", pu: "1,85 €", p6: "11,10 €", pack: 12 },
+            { name: "TX-2-DIELECTRIQUE", pu: "2,19 €", p6: "13,14 €", pack: 12 },
+            { name: "Pintura DECO (Ex. RAL 9010)", pu: "2,20 €", p6: "13,20 €", pack: 6 },
+            { name: "GRAISSE POUR CHAÎNE", pu: "2,24 €", p6: "13,44 €", pack: 12 },
+            { name: "Peinture ÉLECTROMÉNAGER", pu: "2,24 €", p6: "13,44 €", pack: 12 },
+            { name: "BLANC ANTITACHES", pu: "2,31 €", p6: "13,86 €", pack: 12 },
+            { name: "Peinture Ornamentation ARGENTEE", pu: "2,42 €", p6: "14,52 €", pack: 6 },
+            { name: "PLATA GALVANICA", pu: "2,57 €", p6: "15,42 €", pack: 12 },
+            { name: "Peinture \"JANTES\" ARGENT", pu: "2,69 €", p6: "16,14 €", pack: 12 },
+            { name: "Peinture Ornamentation DORÉE", pu: "2,71 €", p6: "16,26 €", pack: 6 },
+            { name: "ZINC MATE", pu: "2,71 €", p6: "16,26 €", pack: 12 },
+            { name: "Peinture \"JANTES DOREE", pu: "2,85 €", p6: "17,10 €", pack: 6 },
+            { name: "ZINC BRILLANTE", pu: "2,90 €", p6: "17,40 €", pack: 12 },
+            { name: "VERNIS AUTO BRILLANT", pu: "2,97 €", p6: "17,82 €", pack: 6 },
+            { name: "Pintura RAL Acrílica HS (Ex. RAL 9005)", pu: "2,97 €", p6: "17,82 €", pack: 6 },
+            { name: "AUTO AGRICOLE VERT JOHN DEERE", pu: "2,97 €", p6: "17,82 €", pack: 6 },
+            { name: "AUTO AGRICOLE JAUNE CATERPILLAR", pu: "2,97 €", p6: "17,82 €", pack: 6 },
+            { name: "APPRET PLASTIQUE AUTO", pu: "2,97 €", p6: "17,82 €", pack: 6 },
+            { name: "AUTO NOIR BRILLANT", pu: "2,97 €", p6: "17,82 €", pack: 6 },
+            { name: "AUTO BLANCHE BRILLANTE", pu: "2,97 €", p6: "17,82 €", pack: 6 },
+            { name: "APPRET BLANC AUTO", pu: "3,09 €", p6: "18,54 €", pack: 6 },
+            { name: "APPRET ROUGE AUTO", pu: "3,09 €", p6: "18,54 €", pack: 6 },
+            { name: "APPRET GRIS AUTO", pu: "3,09 €", p6: "18,54 €", pack: 6 },
+            { name: "MASTIC ELASTIQUE", pu: "3,10 €", p6: "18,60 €", pack: 12 },
+            { name: "MASTIC PLASTIQUES", pu: "3,10 €", p6: "18,60 €", pack: 12 },
+            { name: "MASTIC NITRO GRIS", pu: "3,23 €", p6: "19,38 €", pack: 12 },
+            { name: "ACERO EFECTO INOX", pu: "3,27 €", p6: "19,62 €", pack: 12 },
+            { name: "MASTIC FIBRE DE VERRE", pu: "3,30 €", p6: "19,80 €", pack: 12 },
+            { name: "INOX 18/10", pu: "3,41 €", p6: "20,46 €", pack: 12 },
+            { name: "COBRE GALVANICO", pu: "3,48 €", p6: "20,88 €", pack: 12 },
+            { name: "Peinture Anti-Calorique ARGENTÉE 600°C", pu: "3,70 €", p6: "22,20 €", pack: 6 },
+            { name: "RÉSINE POLYESTER (500 ml)", pu: "3,81 €", p6: "22,86 €", pack: 12 },
+            { name: "Peinture Anti-Calorique BLANC 600°C", pu: "4,07 €", p6: "24,42 €", pack: 6 },
+            { name: "Peinture Anti-Calorique NOIR 600°C", pu: "4,07 €", p6: "24,42 €", pack: 6 },
+            { name: "KIT N 1 (Résine + Tissu)", pu: "6,42 €", p6: "38,52 €", pack: 12 },
+            { name: "TISSU DE VERRE MAT-300 (5m²)", pu: "9,87 €", p6: "59,22 €", pack: 4 }
+        ];
+
         // --- DONNÉES GUIDES D'ENTRETIEN ---
         const discoveryQuestions = [
             {
@@ -690,7 +844,10 @@
             
             document.getElementById('view-discovery').classList.add('hidden');
             document.getElementById('view-catalog').classList.add('hidden');
+            document.getElementById('view-prices').classList.add('hidden');
             document.getElementById('view-quote').classList.add('hidden');
+            document.getElementById('view-history').classList.add('hidden');
+            
             document.getElementById(`view-${viewName}`).classList.remove('hidden');
 
             const searchContainer = document.getElementById('search-container');
@@ -704,6 +861,16 @@
                 document.getElementById('page-title').innerText = "Générateur de Devis";
                 document.getElementById('page-subtitle').innerText = "Simulation rapide pour l'acheteur";
                 renderQuoteForm();
+            } else if (viewName === 'prices') {
+                searchContainer.classList.add('invisible');
+                document.getElementById('page-title').innerText = "Grille Tarifaire";
+                document.getElementById('page-subtitle').innerText = "Prix nets & Colisages";
+                renderPriceList();
+            } else if (viewName === 'history') {
+                searchContainer.classList.add('invisible');
+                document.getElementById('page-title').innerText = "Histoire de l'Entreprise";
+                document.getElementById('page-subtitle').innerText = "Présentation & Valeurs";
+                lucide.createIcons(); // Refresh icons for new content
             } else {
                 searchContainer.classList.remove('invisible');
                 document.getElementById('page-title').innerText = "Catalogue Produits";
@@ -745,6 +912,26 @@
                 container.innerHTML += html;
             });
             lucide.createIcons();
+        }
+
+        // --- VIEW: PRICES ---
+        function renderPriceList() {
+            const tbody = document.getElementById('prices-table-body');
+            tbody.innerHTML = "";
+            
+            priceListItems.forEach(item => {
+                const html = `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-3 font-medium text-slate-900">${item.name}</td>
+                        <td class="px-6 py-3 text-right text-slate-600">${item.pu}</td>
+                        <td class="px-6 py-3 text-right font-bold text-slate-800">${item.p6}</td>
+                        <td class="px-6 py-3 text-center">
+                            <span class="bg-slate-100 text-slate-600 font-bold px-2 py-1 rounded text-xs">${item.pack}</span>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += html;
+            });
         }
 
         // --- VIEW: CATALOG ---
