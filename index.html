@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Negotiator Pro - Bible Arguments B2B</title>
+    <title>FM Spray - Negotiator Pro</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,13 +11,14 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        h1, h2, h3, .font-condensed { font-family: 'Roboto Condensed', sans-serif; }
         
-        .fade-in { animation: fadeIn 0.4s ease-out; }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -25,961 +26,1001 @@
         }
 
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #e2e8f0; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #64748b; }
         
-        /* Highlight pour l'onglet actif */
-        .tab-active {
-            border-bottom: 2px solid #2563eb;
-            color: #1e40af;
-            background-color: #eff6ff;
+        .nav-item {
+            transition: all 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+        .nav-item.active {
+            background-color: #ffffff;
+            color: #dc2626;
+            border-left: 4px solid #dc2626;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-btn.active {
+            border-bottom: 3px solid #dc2626;
+            color: #dc2626;
+            background-color: #fff1f2;
+        }
+
+        .color-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid #cbd5e1;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        
+        .arg-bullet {
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #f1f5f9;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            margin-right: 8px;
         }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-900 pb-20">
+<body class="text-slate-900 h-screen flex overflow-hidden">
 
-    <!-- HEADER -->
-    <header class="bg-white shadow-md sticky top-0 z-50 border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+    <!-- SIDEBAR -->
+    <aside class="w-72 bg-slate-900 text-white flex-shrink-0 flex flex-col z-30 shadow-2xl">
+        <div class="h-24 flex items-center px-6 bg-slate-950 border-b border-slate-800">
+            <div class="bg-red-600 text-white p-2 rounded transform -skew-x-12 mr-3 shadow-lg">
+                <span class="font-condensed font-bold text-2xl italic px-1 skew-x-12">FM</span>
+            </div>
+            <div>
+                <h1 class="text-2xl font-black tracking-tight uppercase font-condensed">Negotiator</h1>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Suite Commerciale</p>
+            </div>
+        </div>
+
+        <div class="p-6 overflow-y-auto">
+            <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Menu Principal</div>
+            <nav class="space-y-3">
+                <button onclick="switchView('discovery')" id="nav-discovery" class="nav-item w-full flex items-center gap-4 px-4 py-4 text-sm font-bold text-slate-300 rounded-r-lg hover:bg-slate-800 hover:text-white text-left group transition-all active">
+                    <div class="bg-slate-800 p-2.5 rounded-lg group-hover:bg-red-600 transition-colors">
+                        <i data-lucide="compass" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="block text-base">Guide d'Entretien</span>
+                        <span class="text-[10px] font-normal text-slate-500 block group-hover:text-slate-300">Script de Découverte</span>
+                    </div>
+                </button>
+                
+                <button onclick="switchView('catalog')" id="nav-catalog" class="nav-item w-full flex items-center gap-4 px-4 py-4 text-sm font-bold text-slate-300 rounded-r-lg hover:bg-slate-800 hover:text-white text-left group transition-all">
+                    <div class="bg-slate-800 p-2.5 rounded-lg group-hover:bg-red-600 transition-colors">
+                        <i data-lucide="package-search" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="block text-base">Catalogue & Args</span>
+                        <span class="text-[10px] font-normal text-slate-500 block group-hover:text-slate-300">Fiches Produits (10+)</span>
+                    </div>
+                </button>
+
+                <button onclick="switchView('quote')" id="nav-quote" class="nav-item w-full flex items-center gap-4 px-4 py-4 text-sm font-bold text-slate-300 rounded-r-lg hover:bg-slate-800 hover:text-white text-left group transition-all">
+                    <div class="bg-slate-800 p-2.5 rounded-lg group-hover:bg-red-600 transition-colors">
+                        <i data-lucide="calculator" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="block text-base">Simulateur Devis</span>
+                        <span class="text-[10px] font-normal text-slate-500 block group-hover:text-slate-300">Chiffrage Rapide</span>
+                    </div>
+                </button>
+            </nav>
+        </div>
+
+        <div class="mt-auto p-6 bg-slate-950 border-t border-slate-800">
             <div class="flex items-center gap-3">
-                <div class="bg-blue-700 text-white p-2.5 rounded-lg shadow-lg">
-                    <i data-lucide="briefcase" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-black text-slate-800 tracking-tight">NEGOTIATOR <span class="text-blue-600">PRO</span></h1>
-                    <p class="text-[11px] text-slate-500 font-bold uppercase tracking-widest">Support Négociation B2B</p>
-                </div>
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                <p class="text-xs text-slate-400 font-medium">Base v6.0 - Prêt</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="flex-grow flex flex-col h-full overflow-hidden relative bg-slate-50">
+        
+        <!-- TOP BAR -->
+        <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 flex-shrink-0 z-20 shadow-sm">
+            <div>
+                <h2 id="page-title" class="text-2xl font-condensed font-bold text-slate-800">Guide d'Entretien</h2>
+                <p id="page-subtitle" class="text-xs text-slate-500 font-medium flex items-center gap-1">
+                    Structure de l'échange commercial
+                </p>
             </div>
             
-            <div class="hidden md:flex items-center bg-slate-100 rounded-lg px-4 py-2 border border-slate-200 w-96 focus-within:ring-2 ring-blue-500 transition-all shadow-inner">
+            <div id="search-container" class="hidden md:flex items-center bg-slate-100 rounded-full px-5 py-2.5 border border-slate-200 w-96 focus-within:ring-2 ring-red-500 focus-within:bg-white transition-all shadow-inner invisible">
                 <i data-lucide="search" class="text-slate-400 mr-3 w-5 h-5"></i>
                 <input 
                     type="text" 
                     id="searchInput"
-                    placeholder="Rechercher (ex: 'Marge', 'Rouille', 'Luxens')..."
-                    class="bg-transparent border-none outline-none text-sm w-full placeholder-slate-400 font-medium"
+                    placeholder="Rechercher un produit..."
+                    class="bg-transparent border-none outline-none text-sm w-full placeholder-slate-400 font-medium text-slate-700"
                 />
             </div>
-        </div>
-    </header>
+        </header>
 
-    <!-- MAIN -->
-    <main class="max-w-7xl mx-auto px-4 py-8">
-        
-        <!-- DASHBOARD STRATÉGIQUE -->
-        <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-6 text-white mb-10 shadow-2xl relative overflow-hidden">
-            <div class="absolute right-0 top-0 w-96 h-96 bg-blue-600 rounded-full mix-blend-overlay filter blur-3xl opacity-20 -mr-20 -mt-20 pointer-events-none"></div>
+        <!-- MAIN SCROLL AREA -->
+        <main class="flex-grow overflow-y-auto custom-scrollbar p-8 relative">
             
-            <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
-                <div>
-                    <h2 class="text-xl font-bold mb-2 flex items-center gap-2 text-yellow-400">
-                        <i data-lucide="target" class="w-5 h-5"></i>
-                        Objectif du Rendez-vous
-                    </h2>
-                    <ul class="text-slate-300 text-sm space-y-1">
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-3 h-3 text-green-400"></i> Maximiser la rentabilité au mètre linéaire (Mix MDD/Marque).</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-3 h-3 text-green-400"></i> Vendre la complémentarité des gammes (Cross-Selling).</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-3 h-3 text-green-400"></i> Rassurer sur la technicité et le SAV.</li>
-                    </ul>
-                </div>
-                <div class="flex gap-4">
-                    <div class="bg-white/10 px-6 py-3 rounded-xl border border-white/10 text-center hover:bg-white/20 transition-colors">
-                        <span class="block text-3xl font-black text-green-400">+18%</span>
-                        <span class="text-[10px] uppercase font-bold tracking-wide opacity-80">Obj. Panier</span>
-                    </div>
-                    <div class="bg-white/10 px-6 py-3 rounded-xl border border-white/10 text-center hover:bg-white/20 transition-colors">
-                        <span class="block text-3xl font-black text-blue-400">30+</span>
-                        <span class="text-[10px] uppercase font-bold tracking-wide opacity-80">Références</span>
+            <!-- VIEW 1: DISCOVERY (GUIDE) -->
+            <div id="view-discovery" class="max-w-5xl mx-auto pb-32 fade-in">
+                
+                <div class="bg-white rounded-2xl p-8 mb-8 shadow-sm border-l-8 border-red-600 relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h2 class="text-3xl font-condensed font-black text-slate-900 mb-3">Script de Découverte Stratégique</h2>
+                        <p class="text-slate-600 text-lg">Ce guide est conçu pour structurer l'entretien avec les acheteurs <strong>Leroy Merlin</strong> et <strong>Castorama</strong>. Il suit une logique d'entonnoir pour aboutir au closing.</p>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- NAVIGATION & FILTRES -->
-        <div class="sticky top-20 z-40 bg-slate-100/95 backdrop-blur-sm py-4 -mx-4 px-4 border-b border-slate-200 mb-6 transition-all shadow-sm" id="stickyFilter">
-            
-            <!-- 1. Univers Principaux (Rayons) -->
-            <div class="mb-3">
-                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider ml-1 mb-1 block">Par Univers (Rayon)</span>
-                <div id="universFilters" class="flex flex-wrap gap-2 justify-start overflow-x-auto pb-1 no-scrollbar">
-                    <!-- Boutons Univers injectés ici -->
+                <div id="discovery-content" class="space-y-8">
+                    <!-- Questions injected by JS -->
                 </div>
             </div>
 
-            <!-- 2. Filtres Thématiques (Transverses) -->
-            <div class="mt-2 pt-2 border-t border-slate-200/60">
-                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider ml-1 mb-1 block">Par Besoin (Transverse)</span>
-                <div id="tagFilters" class="flex flex-wrap gap-2 justify-start">
-                    <!-- Boutons Tags injectés ici -->
+            <!-- VIEW 2: CATALOG -->
+            <div id="view-catalog" class="hidden fade-in pb-20">
+                
+                <!-- Filters -->
+                <div class="mb-8 sticky top-0 z-30 bg-slate-50/95 backdrop-blur py-4 border-b border-slate-200 -mx-8 px-8 shadow-sm">
+                    <div id="universFilters" class="flex flex-wrap gap-3">
+                        <!-- Filters injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Grid -->
+                <div id="productsGrid" class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8">
+                    <!-- Products injected by JS -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="hidden flex-col items-center justify-center py-32 text-slate-400 border-4 border-dashed border-slate-200 rounded-3xl bg-white">
+                    <i data-lucide="search-x" class="w-24 h-24 mb-6 opacity-20 text-slate-900"></i>
+                    <p class="text-2xl font-bold text-slate-600 mb-2">Aucun résultat trouvé</p>
+                    <button onclick="resetSearch()" class="text-red-600 font-bold hover:underline bg-red-50 px-6 py-3 rounded-xl transition-colors">Tout réinitialiser</button>
                 </div>
             </div>
 
-        </div>
+            <!-- VIEW 3: QUOTE GENERATOR -->
+            <div id="view-quote" class="hidden fade-in pb-20">
+                <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Selector Column -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                            <h3 class="text-lg font-condensed font-bold text-slate-800 mb-4 border-b pb-2">Ajouter un Produit</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Produit</label>
+                                    <select id="quote-product-select" class="w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+                                        <option value="">Sélectionner...</option>
+                                        <!-- Populated by JS -->
+                                    </select>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Quantité (UVC)</label>
+                                        <input type="number" id="quote-qty" value="6" min="1" class="w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Prix Tarif (€)</label>
+                                        <input type="number" id="quote-price" value="0.00" step="0.01" class="w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                                    </div>
+                                </div>
 
-        <!-- GRILLE PRODUITS -->
-        <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 min-h-[500px]">
-            <!-- Cartes injectées ici -->
-        </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Remise Négociée (%)</label>
+                                    <input type="number" id="quote-discount" value="0" min="0" max="100" class="w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                                </div>
 
-        <!-- Empty State -->
-        <div id="emptyState" class="hidden flex-col items-center justify-center py-24 text-slate-400 border-2 border-dashed border-slate-300 rounded-2xl bg-slate-50 col-span-full">
-            <i data-lucide="package-search" class="w-16 h-16 mb-4 opacity-30 text-blue-500"></i>
-            <p class="text-xl font-semibold text-slate-500">Aucun produit ne correspond à votre recherche.</p>
-            <button onclick="resetSearch()" class="mt-4 text-blue-600 font-bold hover:underline">Réinitialiser les filtres</button>
-        </div>
+                                <button onclick="addToQuote()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md">
+                                    <i data-lucide="plus-circle" class="w-5 h-5"></i> Ajouter au Devis
+                                </button>
+                            </div>
+                        </div>
 
-    </main>
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-200">
+                            <h4 class="text-sm font-bold text-blue-800 mb-2 flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i> Info Logistique</h4>
+                            <p class="text-xs text-blue-700">Minimum de commande : 1 Carton (6 UVC).<br>Franco de port : À définir selon contrat cadre.</p>
+                        </div>
+                    </div>
 
-    <footer class="bg-white border-t border-slate-200 mt-20 py-10">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-slate-400 text-sm font-medium">© 2024 Negotiator Pro - Outil d'aide à la vente B2B.</p>
-            <p class="mt-2 text-xs text-slate-300">Données extraites des fiches techniques officielles. Usage interne confidentiel.</p>
-        </div>
-    </footer>
+                    <!-- Table Column -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                            <div class="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                                <div>
+                                    <h3 class="text-xl font-condensed font-bold text-slate-800">Simulation de Commande</h3>
+                                    <p class="text-xs text-slate-500">Brouillon Négociation</p>
+                                </div>
+                                <button onclick="printQuote()" class="text-slate-500 hover:text-slate-800 transition-colors p-2">
+                                    <i data-lucide="printer" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm">
+                                    <thead class="bg-slate-100 text-slate-500 uppercase font-bold text-xs">
+                                        <tr>
+                                            <th class="px-6 py-3">Réf / Produit</th>
+                                            <th class="px-6 py-3 text-center">Qté</th>
+                                            <th class="px-6 py-3 text-right">Prix Brut</th>
+                                            <th class="px-6 py-3 text-right">Remise</th>
+                                            <th class="px-6 py-3 text-right">Total HT</th>
+                                            <th class="px-6 py-3"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="quote-table-body" class="divide-y divide-slate-100">
+                                        <!-- Rows injected by JS -->
+                                        <tr id="empty-row">
+                                            <td colspan="6" class="px-6 py-12 text-center text-slate-400 italic">Aucun produit ajouté</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
 
-    <!-- JAVASCRIPT -->
+                            <div class="bg-slate-50 p-6 border-t border-slate-200">
+                                <div class="flex justify-end">
+                                    <div class="w-64 space-y-2">
+                                        <div class="flex justify-between text-slate-600">
+                                            <span>Total Brut HT</span>
+                                            <span id="total-gross" class="font-medium">0.00 €</span>
+                                        </div>
+                                        <div class="flex justify-between text-slate-600">
+                                            <span>Total Remise</span>
+                                            <span id="total-discount" class="font-medium text-green-600">-0.00 €</span>
+                                        </div>
+                                        <div class="h-px bg-slate-300 my-2"></div>
+                                        <div class="flex justify-between text-lg font-black text-slate-900">
+                                            <span>NET À PAYER</span>
+                                            <span id="total-net">0.00 €</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- SCRIPT -->
     <script>
-        // --- DONNÉES COMPLÈTES (30+ RÉFÉRENCES) ---
-        // J'ajoute une propriété 'tags' à chaque produit pour le filtrage transversal
-        const productsData = [
-            // ===================================
-            // UNIVERS 1 : METAL & ANTIROUILLE
-            // ===================================
+        // --- DONNÉES GUIDES D'ENTRETIEN ---
+        const discoveryQuestions = [
             {
-                id: 101, univers: 1, brand: "Hammerite", isMDD: false,
-                name: "Direct sur Rouille", target: "Rénovation lourde / Premium",
-                badge: "Leader Marché", ref: "HAM-DIR-400", tags: ["Technique", "Extérieur", "Premium"],
-                reviews: { score: 4.8, count: 1250 },
-                kpis: [{label:"Part de Marché", value:"#1"}, {label:"Retour SAV", value:"<0.1%"}, {label:"Notoriété", value:"92%"}],
-                pitch: "Le produit réflexe. Le client ne demande pas 'un antirouille', il demande 'du Hammerite'. C'est votre assurance chiffre d'affaires sur le segment premium.",
-                highlights: ["3-en-1 : Antirouille + Primaire + Peinture.", "Technologie DualTech imperméable.", "Application directe sur rouille."],
-                techSpecs: [{label:"Séchage", value:"1h (Toucher)"}, {label:"Rendement", value:"Elevé"}, {label:"Durabilité", value:"8 ans"}],
-                businessArgs: [
-                    {label:"Trafic Builder", value:"Marque Destination", definition:"Attire le client en rayon spécifiquement pour ce produit."},
-                    {label:"Marge Valeur", value:"Forte", definition:"Prix facial élevé = Marge en euros importante par unité vendue."},
-                    {label:"Rotation", value:"Maximale", definition:"Pas de stock dormant, c'est le 20/80 du rayon métal."},
-                    {label:"Sécurité", value:"Zéro Litige", definition:"La qualité est telle que vous n'aurez jamais de retour client."}
-                ],
-                objections: [{objection:"C'est cher.", response:"C'est une économie globale : pas de primaire à acheter, gain de temps énorme. Le client le sait."}]
+                phase: "PHASE 1 : VISION & TENDANCES",
+                subtitle: "L'Ouverture Positive",
+                color: "border-purple-500 text-purple-700 bg-purple-50",
+                icon: "eye",
+                questions: [
+                    "Avec votre position de leader (40% de parts de marché), comment ressentez-vous la dynamique globale de votre secteur en ce moment ?",
+                    "Quelles sont les grandes tendances de consommation ou les nouveaux comportements clients (comme le DIY ou le Home Staging) qui tirent votre activité vers le haut cette année ?",
+                    "Au-delà des chiffres, quelle est la vision ou l'ambiance que vous souhaitez donner à votre rayon Peinture pour les saisons à venir : plutôt une orientation 'Déco pure' ou 'Expertise technique' ?",
+                    "Quelles sont les familles de produits ou les innovations récentes qui ont reçu le meilleur accueil de la part de vos clients ces derniers mois ?",
+                    "Globalement, quels sont les défis passionnants que vous vous êtes fixés pour continuer à différencier l'expérience Leroy Merlin de celle des pure-players web ou des discounters ?"
+                ]
             },
             {
-                id: 102, univers: 1, brand: "Julien", isMDD: false,
-                name: "Antirouille & Sous-couche", target: "Dépannage / Préparation",
-                badge: "Volume", ref: "JUL-ANTI-400", tags: ["Technique", "Préparation", "Pro"],
-                reviews: { score: 4.6, count: 430 },
-                kpis: [{label:"Cross-Sell", value:"25%"}, {label:"Séchage", value:"10 min"}, {label:"Usage", value:"Mixte"}],
-                pitch: "Le 'Couteau Suisse' du rayon. Il sauve les chantiers. Indispensable pour ne pas rater une vente de finition quand le support est mauvais.",
-                highlights: ["Séchage record 10 min.", "Sous-couche universelle.", "Stop corrosion immédiat."],
-                techSpecs: [{label:"Adhérence", value:"Tous métaux"}, {label:"Couleur", value:"Gris / Rouge"}, {label:"Recouvrable", value:"Tout type"}],
-                businessArgs: [
-                    {label:"Vente Additionnelle", value:"Systématique", definition:"À placer à côté des laques finition : 'Avez-vous pensé à la préparation ?'."},
-                    {label:"Panier Moyen", value:"Booster", definition:"Ajoute 10-12€ au panier sans effort de vente."},
-                    {label:"Fidélité", value:"Marque Historique", definition:"Les 'anciens' bricoleurs ne jurent que par Julien."}
-                ],
-                objections: [{objection:"Pourquoi pas la MDD ?", response:"Pour la rapidité de séchage (10 min) inégalée, cruciale pour les chantiers pressés."}]
+                phase: "PHASE 2 : L'OFFRE ACTUELLE & LE RAYON",
+                subtitle: "L'Analyse",
+                color: "border-blue-500 text-blue-700 bg-blue-50",
+                icon: "layout-grid",
+                questions: [
+                    "Comment est structuré votre linéaire aérosols aujourd'hui : l'entrée se fait-elle par marque, par usage (Tech/Déco) ou par couleur ?",
+                    "Quelle est votre stratégie concernant l'équilibre entre votre marque propre (Luxens) et les marques nationales ? Cherchez-vous des marques pour couvrir des niches spécifiques ?",
+                    "Sur le segment de la peinture technique (Antirouille, Haute Température), sentez-vous que vos clients sont de plus en plus exigeants sur la performance professionnelle des produits ?",
+                    "Y a-t-il des demandes récurrentes de vos clients (couleurs spécifiques, usages particuliers) auxquelles vous devez répondre 'non' aujourd'hui faute de référence en rayon ?",
+                    "Quelle importance accordez-vous aux certifications (ISO, A+) et à la RSE pour rassurer vos clients sur la sécurité des produits chimiques en rayon ?"
+                ]
             },
             {
-                id: 103, univers: 1, brand: "Luxens", isMDD: true,
-                name: "Peinture Fer Antirouille", target: "Cœur de gamme / Q-P",
-                badge: "Rentabilité", ref: "LUX-FER-400", tags: ["Technique", "Eco", "Extérieur"],
-                reviews: { score: 4.2, count: 2100 },
-                kpis: [{label:"Marge %", value:"Max"}, {label:"Prix", value:"Attractif"}, {label:"Volume", value:"Massif"}],
-                pitch: "Le pilier de votre marge. Répond à 80% des besoins standards avec la garantie de votre enseigne.",
-                highlights: ["Direct sur rouille.", "Garantie enseigne.", "Prix compétitif."],
-                techSpecs: [{label:"Base", value:"Solvantée"}, {label:"Aspect", value:"Brillant/Satin/Mat"}, {label:"Protection", value:"Int/Ext"}],
-                businessArgs: [
-                    {label:"Rentabilité", value:"Levier Marge", definition:"Produit à plus forte marge procentuelle du rayon."},
-                    {label:"Image Prix", value:"Compétitivité", definition:"Positionne l'enseigne comme accessible sur le rayon technique."},
-                    {label:"Fidélisation", value:"Exclusivité", definition:"Le client doit revenir chez vous pour retrouver la même teinte exacte."}
-                ],
-                objections: [{objection:"Moins bon que Hammerite ?", response:"Excellent rapport qualité/prix pour des travaux standards. Suffisant pour 90% des usages."}]
+                phase: "PHASE 3 : LE PRODUIT & LA TECHNICITÉ",
+                subtitle: "Le Ciblage FM Spray",
+                color: "border-green-500 text-green-700 bg-green-50",
+                icon: "wrench",
+                questions: [
+                    "Pour la protection des métaux, vos clients pros se contentent-ils d'une peinture grise classique, ou avez-vous des demandes pour de la véritable galvanisation à froid (Zinc pur à 98%) ?",
+                    "Concernant la saisonnalité (Poêles / Barbecues), cherchez-vous à monter en gamme avec des produits certifiés haute résistance (600°C) pour éviter les retours SAV ?",
+                    "Avez-vous identifié un besoin au rayon droguerie pour des solutions de nettoyage 'choc' (type anti-moisissures sans effort) qui fidélisent le client par leur efficacité ?",
+                    "Vos gammes actuelles couvrent-elles les besoins de réparation automobile spécifiques (jantes, carrosserie, plastiques) ou est-ce un segment que vous souhaitez reconquérir ?",
+                    "Sur le marché de la rénovation, avez-vous une solution dédiée pour l'électroménager et les radiateurs, ou conseillez-vous une peinture généraliste ?"
+                ]
             },
             {
-                id: 104, univers: 1, brand: "Axton", isMDD: true,
-                name: "Traitement Rouille", target: "Expertise Curative",
-                badge: "Technique", ref: "AXT-TRT-400", tags: ["Technique", "Pro", "Réparation"],
-                reviews: { score: 4.5, count: 180 },
-                kpis: [{label:"Efficacité", value:"100%"}, {label:"Panier +", value:"Oui"}, {label:"Retour", value:"0"}],
-                pitch: "Le médecin du métal. Quand c'est trop tard pour la prévention, c'est le seul produit qui rassure le client en transformant chimiquement la rouille.",
-                highlights: ["Transforme la rouille en surface saine.", "Action visible (noircit).", "Évite le remplacement de la pièce."],
-                techSpecs: [{label:"Action", value:"Convertisseur"}, {label:"Support", value:"Fer oxydé"}, {label:"Recouvrable", value:"24h"}],
-                businessArgs: [
-                    {label:"Crédibilité Rayon", value:"Expertise", definition:"Montre que vous avez des solutions techniques pointues, pas juste de la déco."},
-                    {label:"Vente Complémentaire", value:"Préparateur", definition:"S'achète EN PLUS de la peinture, jamais seul. Double vente."},
-                    {label:"Satisfaction", value:"Sauveur", definition:"Résout un problème critique (la rouille qui revient), fidélise le client à vie."}
-                ],
-                objections: [{objection:"Produit de niche ?", response:"Oui, mais marge pure car achat de nécessité absolue."}]
-            },
-
-            // ===================================
-            // UNIVERS 2 : CARROSSERIE & AUTO
-            // ===================================
-            {
-                id: 201, univers: 2, brand: "Julien", isMDD: false,
-                name: "Peinture Carrosserie", target: "Auto / Moto / Vélo",
-                badge: "Spécifique", ref: "JUL-CAR-400", tags: ["Technique", "Pro", "Spécialiste"],
-                reviews: { score: 4.3, count: 180 },
-                kpis: [{label:"Résist.", value:"Essence"}, {label:"Rendu", value:"Tendu"}, {label:"Usage", value:"Retouche"}],
-                pitch: "La seule bombe qui ne fond pas quand on fait le plein. Résistance aux hydrocarbures indispensable pour ce segment.",
-                highlights: ["Insensible à l'essence.", "Résiste aux gravillons/rayures.", "Finition carrossier."],
-                techSpecs: [{label:"Séchage", value:"Rapide"}, {label:"Finition", value:"Brillant/Mat"}, {label:"Support", value:"Métal préparé"}],
-                businessArgs: [
-                    {label:"Monopole", value:"Unique", definition:"Peu de concurrence en GSB sur ce créneau spécifique."},
-                    {label:"Panier Moyen", value:"Dépannage", definition:"Alternative économique au carrossier, prix accepté élevé."},
-                    {label:"Cible", value:"Masculine+", definition:"Attire une clientèle qui vient aussi pour l'outillage ou le garage."}
-                ],
-                objections: [{objection:"Peu de volume ?", response:"Produit de service. Si vous ne l'avez pas, le client va en centre auto pour tout son projet."}]
-            },
-            {
-                id: 202, univers: 2, brand: "Julien", isMDD: false,
-                name: "Vernis Carrosserie", target: "Finition Auto",
-                badge: "Finition", ref: "JUL-VER-CAR", tags: ["Finition", "Technique"],
-                reviews: { score: 4.2, count: 90 },
-                kpis: [{label:"Vente Liée", value:"100%"}, {label:"Brillance", value:"Max"}, {label:"UV", value:"Stop"}],
-                pitch: "L'indispensable 'Clear Coat'. On ne vend jamais une peinture carrosserie sans son vernis, sinon ça ternit en 6 mois.",
-                highlights: ["Brillance profonde.", "Protection UV maximale.", "Durcit la surface."],
-                techSpecs: [{label:"Aspect", value:"Brillant"}, {label:"Usage", value:"Sur peinture"}, {label:"Couches", value:"2 min"}],
-                businessArgs: [
-                    {label:"Cross-Selling", value:"Automatique", definition:"1 Peinture = 1 Vernis. C'est mécanique."},
-                    {label:"Satisfaction", value:"Fini Pro", definition:"C'est le vernis qui donne l'aspect 'neuf' que le client cherche."},
-                    {label:"Marge", value:"Additionnelle", definition:"Produit à forte valorisation pour une petite contenance."}
-                ],
-                objections: [{objection:"Est-ce obligatoire ?", response:"Pour les teintes métallisées, oui. Sinon l'aspect est mat et fragile."}]
-            },
-
-            // ===================================
-            // UNIVERS 3 : DÉCO & EFFETS
-            // ===================================
-            {
-                id: 301, univers: 3, brand: "Maison Déco", isMDD: false,
-                name: "Relook Tout (Couleur)", target: "Home Staging",
-                badge: "Tendance", ref: "MD-REL-400", tags: ["Déco", "Intérieur", "Premium"],
-                reviews: { score: 4.7, count: 890 },
-                kpis: [{label:"Viralité", value:"TikTok"}, {label:"Support", value:"Tous"}, {label:"Panier", value:"30€+"}],
-                pitch: "Le produit qui déclenche l'achat coup de cœur. 'Je n'ai pas besoin de poncer ? Je le prends !'. C'est le roi de l'achat d'impulsion déco.",
-                highlights: ["Zéro ponçage, zéro sous-couche.", "Tient sur mélaminé, verre, plastique.", "Couleurs tendances (Kaki, Terracotta)."],
-                techSpecs: [{label:"Supports", value:"Universel"}, {label:"Opacité", value:"98%"}, {label:"Séchage", value:"15 min"}],
-                businessArgs: [
-                    {label:"Panier Moyen", value:"Projet", definition:"On repeint rarement un seul pied de chaise. Vente par 2 ou 3 unités."},
-                    {label:"Cible", value:"Femmes/Jeunes", definition:"Attire une démographie différente du rayon peinture technique."},
-                    {label:"Saisonnalité", value:"Toute l'année", definition:"Projets d'intérieur qui se font été comme hiver."}
-                ],
-                objections: [{objection:"C'est cher au litre.", response:"On vend une solution 'Zéro Effort'. Le client paie pour ne pas poncer."}]
-            },
-            {
-                id: 302, univers: 3, brand: "Dulux Valentine", isMDD: false,
-                name: "Color Touch (Effets)", target: "Créatif / DIY",
-                badge: "Inspiration", ref: "DUL-EFF-400", tags: ["Déco", "Intérieur", "Spécialiste"],
-                reviews: { score: 4.3, count: 320 },
-                kpis: [{label:"Marge/U", value:"++"}, {label:"Unicité", value:"100%"}, {label:"Trafic", value:"Noël"}],
-                pitch: "Transformez le banal en or. Effet métal, pierre, pailleté... C'est le rayon 'Loisirs Créatifs' qui booste votre rayon peinture.",
-                highlights: ["Rendus bluffants (Pierre, Métal).", "Fonctions (Tableau craie, Magnétique).", "Marque rassurante."],
-                techSpecs: [{label:"Effets", value:"Pierre, Métal..."}, {label:"Usage", value:"Intérieur"}, {label:"Séchage", value:"Rapide"}],
-                businessArgs: [
-                    {label:"Marge", value:"Niche", definition:"Produit à très forte valeur ajoutée unitaire."},
-                    {label:"Animation", value:"Visuelle", definition:"Permet de faire des têtes de gondole spectaculaires (Noël, Rentrée)."},
-                    {label:"Différenciation", value:"Image", definition:"Montre que votre rayon suit les tendances déco."}
-                ],
-                objections: [{objection:"Faible rotation ?", response:"Oui, mais marge compensatoire très élevée et produit d'image indispensable."}]
-            },
-            {
-                id: 303, univers: 3, brand: "Maison Déco", isMDD: false,
-                name: "Vernis Pailleté", target: "Chambre Enfant / Déco",
-                badge: "Fun", ref: "MD-PAIL-400", tags: ["Déco", "Finition", "Intérieur"],
-                reviews: { score: 4.6, count: 200 },
-                kpis: [{label:"Cible", value:"Jeune"}, {label:"Fonction", value:"2-en-1"}, {label:"Achat", value:"Cœur"}],
-                pitch: "Protège et fait briller en un geste. Idéal pour les chambres d'enfants ou customiser des objets. Produit 'Bonbon' à forte tentation.",
-                highlights: ["Paillettes intégrées.", "Protection vernis.", "Séchage rapide."],
-                techSpecs: [{label:"Finition", value:"Pailleté"}, {label:"Base", value:"Vernis"}, {label:"Usage", value:"Intérieur"}],
-                businessArgs: [
-                    {label:"Achat d'Impulsion", value:"Coup de cœur", definition:"Produit qu'on ajoute au panier sans avoir prévu."},
-                    {label:"Cible", value:"Famille", definition:"Génère de l'intérêt pour la rénovation de chambre d'enfant."},
-                    {label:"Concurrence", value:"Faible", definition:"Peu de produits équivalents en rayon."}
-                ],
-                objections: [{objection:"Kitsch ?", response:"Très demandé pour la décoration festive et enfantine."}]
-            },
-
-            // ===================================
-            // UNIVERS 4 : EXTÉRIEUR & GALVA
-            // ===================================
-            {
-                id: 401, univers: 4, brand: "Julien", isMDD: false,
-                name: "Peinture Galvanisante", target: "Pro / Serrurerie",
-                badge: "Protection", ref: "JUL-GAL-400", tags: ["Technique", "Pro", "Extérieur"],
-                reviews: { score: 4.7, count: 230 },
-                kpis: [{label:"Zinc", value:"95%"}, {label:"Action", value:"Anode"}, {label:"Cible", value:"Pro"}],
-                pitch: "La vraie galvanisation à froid. 95% de zinc pur. Ce n'est pas de la peinture, c'est du métal en spray. Indispensable pour les coupes de ferraille.",
-                highlights: ["Zinc pur 95% (Protection Cathodique).", "Retouche après soudure.", "Protection extrême."],
-                techSpecs: [{label:"Aspect", value:"Mat / Brillant"}, {label:"Séchage", value:"Eclair"}, {label:"Usage", value:"Extérieur"}],
-                businessArgs: [
-                    {label:"Lien Rayon Bâti", value:"Cross-Merch", definition:"Devrait être vendu aussi au rayon matériaux/ferronnerie."},
-                    {label:"Cible Pro", value:"Crédibilité", definition:"Produit technique qui valide votre expertise auprès des artisans."},
-                    {label:"Rotation", value:"Régulière", definition:"Consommable de chantier récurrent."}
-                ],
-                objections: [{objection:"Peinture Alu c'est pareil ?", response:"Non ! L'alu décore, le Galva protège chimiquement par sacrifice (anode)."}]
-            },
-            {
-                id: 402, univers: 4, brand: "Axton", isMDD: true,
-                name: "Galva à Froid", target: "Retouche éco",
-                badge: "Prix", ref: "AXT-GAL-400", tags: ["Technique", "Eco", "Extérieur"],
-                reviews: { score: 4.4, count: 180 },
-                kpis: [{label:"Prix", value:"Top"}, {label:"Usage", value:"Retouche"}, {label:"Marge", value:"MDD"}],
-                pitch: "La retouche efficace au juste prix. Pour cacher une soudure ou un point de rouille sans se ruiner. Fait le job.",
-                highlights: ["Aspect Galva.", "Prix d'appel.", "Protection correcte."],
-                techSpecs: [{label:"Finition", value:"Mat"}, {label:"Zinc", value:"Standard"}, {label:"Usage", value:"Retouche"}],
-                businessArgs: [
-                    {label:"Volume", value:"Masse", definition:"L'alternative économique pour les gros chantiers."},
-                    {label:"Rentabilité", value:"Marge", definition:"Produit MDD à forte marge unitaire."},
-                    {label:"Complément", value:"Gamme", definition:"Permet d'avoir une offre prix face au Julien."}
-                ],
-                objections: [{objection:"Moins de zinc ?", response:"Suffisant pour une retouche esthétique et protectrice standard."}]
-            },
-            {
-                id: 403, univers: 4, brand: "Owatrol", isMDD: false,
-                name: "Galva Rustol", target: "Expert / Durable",
-                badge: "Référence", ref: "OWA-GAL-400", tags: ["Technique", "Pro", "Premium"],
-                reviews: { score: 4.9, count: 90 },
-                kpis: [{label:"Tech", value:"Rustol"}, {label:"Durable", value:"Max"}, {label:"Fidélité", value:"100%"}],
-                pitch: "Le légendaire Rustol en spray. Pour ceux qui savent. La protection qui pénètre le métal et ne bouge plus jamais.",
-                highlights: ["Technologie Rustol (Pénétrant).", "Ne s'écaille pas.", "Adhérence parfaite."],
-                techSpecs: [{label:"Base", value:"Rustol"}, {label:"Aspect", value:"Satiné"}, {label:"Protection", value:"Intense"}],
-                businessArgs: [
-                    {label:"Fidélité Absolue", value:"Fanbase", definition:"Un utilisateur d'Owatrol n'achètera rien d'autre. Ne le perdez pas."},
-                    {label:"Valorisation", value:"Panier", definition:"Prix de vente élevé, justifié par la performance."},
-                    {label:"Image", value:"Expert", definition:"Marque de spécialiste qui rehausse le niveau du rayon."}
-                ],
-                objections: [{objection:"Trop cher.", response:"On ne refait pas le travail deux fois avec Owatrol. C'est un investissement."}]
-            },
-            {
-                id: 404, univers: 4, brand: "Dulux Valentine", isMDD: false,
-                name: "Écran+ Extérieur", target: "Protection Bois/Fer",
-                badge: "Polyvalent", ref: "DUL-EXT-400", tags: ["Extérieur", "Premium"],
-                reviews: { score: 4.5, count: 150 },
-                kpis: [{label:"Garantie", value:"Temps"}, {label:"UV", value:"Stop"}, {label:"Support", value:"Multi"}],
-                pitch: "Le bouclier tous temps. Bois, Fer, Alu... Un seul produit pour tout protéger dehors. Simplifie la vie du client.",
-                highlights: ["Résine souple (suit les déformations).", "Barrière UV.", "Multi-matériaux."],
-                techSpecs: [{label:"Usage", value:"Extérieur"}, {label:"Finition", value:"Satiné"}, {label:"Teintes", value:"Neutres"}],
-                businessArgs: [
-                    {label:"Simplification", value:"Lineaire", definition:"Remplace plusieurs références spécifiques (Bois, Fer...). Gain de place."},
-                    {label:"Marque", value:"Confiance", definition:"Dulux rassure sur la tenue des couleurs en extérieur."},
-                    {label:"Rotation", value:"Saison", definition:"Fortes ventes au printemps/été."}
-                ],
-                objections: [{objection:"Bon pour le bois ?", response:"Oui, microporeux, il laisse respirer le bois."}]
-            },
-
-            // ===================================
-            // UNIVERS 5 : HAUTE TEMPÉRATURE
-            // ===================================
-            {
-                id: 501, univers: 5, brand: "Pyrofeu", isMDD: false,
-                name: "Haute Température", target: "Poêles / Inserts",
-                badge: "Sécurité", ref: "PYR-HT-400", tags: ["Technique", "Spécialiste", "Sécurité"],
-                reviews: { score: 4.7, count: 540 },
-                kpis: [{label:"Temp", value:"600°C"}, {label:"Saison", value:"Hiver"}, {label:"Risque", value:"0"}],
-                pitch: "On ne joue pas avec le feu. Pyrofeu est la référence des cheministes. C'est la sécurité avant tout pour le client.",
-                highlights: ["Résistance certifiée 600°C.", "Ne cloque pas.", "Adhérence fonte."],
-                techSpecs: [{label:"Couleur", value:"Noir/Anthracite"}, {label:"Usage", value:"Poêle/Insert"}, {label:"Formule", value:"Silicone"}],
-                businessArgs: [
-                    {label:"Saisonnalité", value:"Double", definition:"Pic en Hiver (Chauffage) et Été (Barbecue)."},
-                    {label:"Concurrence", value:"Nulle", definition:"Marque synonyme de sécurité, le client ne négocie pas le prix."},
-                    {label:"Complémentarité", value:"Chauffage", definition:"Lien direct avec le rayon chauffage/bois."}
-                ],
-                objections: [{objection:"Cher pour du noir.", response:"C'est un produit de sécurité technique, pas de la peinture déco."}]
-            },
-            {
-                id: 502, univers: 5, brand: "Maison Déco", isMDD: false,
-                name: "Haute Temp (Gris Fonte)", target: "Déco Chauffage",
-                badge: "Design", ref: "MD-HT-FONTE", tags: ["Déco", "Technique", "Spécialiste"],
-                reviews: { score: 4.5, count: 200 },
-                kpis: [{label:"Look", value:"Fonte"}, {label:"Temp", value:"600°C"}, {label:"Offre", value:"Unique"}],
-                pitch: "Le look 'Fonte Ancienne'. Permet de redonner du cachet à un vieux poêle ou des tuyaux. Offre une alternative esthétique au noir.",
-                highlights: ["Aspect Gris Fonte réaliste.", "Résistance 600°C.", "Direct sans sous-couche."],
-                techSpecs: [{label:"Couleur", value:"Gris Fonte"}, {label:"Séchage", value:"15 min"}, {label:"Temp", value:"600°C"}],
-                businessArgs: [
-                    {label:"Esthétique", value:"Déco", definition:"Vend du style là où les autres vendent juste de la fonction."},
-                    {label:"Complément", value:"Gamme", definition:"Seul produit à proposer cette teinte spécifique en HT."},
-                    {label:"Valorisation", value:"Rénov", definition:"Encourage la restauration de poêles anciens."}
-                ],
-                objections: [{objection:"Doublon ?", response:"Non, couleur spécifique introuvable ailleurs."}]
-            },
-            {
-                id: 503, univers: 5, brand: "Luxens", isMDD: true,
-                name: "Peinture Haute Température", target: "BBQ / Eco",
-                badge: "Prix", ref: "LUX-HT-400", tags: ["Technique", "Eco", "Extérieur"],
-                reviews: { score: 4.2, count: 800 },
-                kpis: [{label:"Prix", value:"Appel"}, {label:"Volume", value:"Fort"}, {label:"Usage", value:"BBQ"}],
-                pitch: "La protection accessible. Parfait pour remettre à neuf le barbecue qui rouille. Simple, efficace, pas cher.",
-                highlights: ["Résiste hautes températures.", "Noir Mat.", "Int/Ext."],
-                techSpecs: [{label:"Temp", value:"Haute"}, {label:"Usage", value:"BBQ"}, {label:"Rendement", value:"Standard"}],
-                businessArgs: [
-                    {label:"Volume", value:"Masse", definition:"Produit de fond de rayon indispensable."},
-                    {label:"Accessibilité", value:"Prix", definition:"Permet au client de rénover son BBQ pour quelques euros."},
-                    {label:"Marge", value:"MDD", definition:"Marge confortable sur un produit de commodité."}
-                ],
-                objections: [{objection:"Moins résistant ?", response:"Suffisant pour 90% des usages domestiques (BBQ, chenêts)."}]
-            },
-            {
-                id: 504, univers: 5, brand: "Julien", isMDD: false,
-                name: "Hautes Températures", target: "Pro / Intensif",
-                badge: "Performance", ref: "JUL-HT-400", tags: ["Technique", "Pro", "Premium"],
-                reviews: { score: 4.6, count: 300 },
-                kpis: [{label:"Gamme", value:"3 finitions"}, {label:"Tech", value:"600°C"}, {label:"Couvrant", value:"Fort"}],
-                pitch: "Le choix technique. Résiste aux chocs thermiques répétés. Seule gamme à proposer du Brillant et Satiné en Haute Température.",
-                highlights: ["Résiste 600°C.", "Existe en Brillant/Satin/Mat.", "Ne s'écaille pas."],
-                techSpecs: [{label:"Finitions", value:"Mat, Brillant, Satin"}, {label:"Séchage", value:"Rapide"}, {label:"Temp", value:"600°C"}],
-                businessArgs: [
-                    {label:"Largeur Gamme", value:"Unique", definition:"Seul à proposer des finitions autres que Mat en HT."},
-                    {label:"Crédibilité", value:"Marque", definition:"La caution technique Julien rassure."},
-                    {label:"Usage", value:"Spécifique", definition:"Pour tuning échappement (Brillant) ou poêles modernes."}
-                ],
-                objections: [{objection:"Utilité du brillant ?", response:"Marché de niche : moto, tuning, tuyauterie apparente."}]
-            },
-
-            // ===================================
-            // UNIVERS 6 : MARQUAGE
-            // ===================================
-            {
-                id: 601, univers: 6, brand: "Julien", isMDD: false,
-                name: "Marquage Chantier", target: "BTP / Voirie",
-                badge: "Pro", ref: "JUL-MRQ-500", tags: ["Pro", "Technique", "Extérieur"],
-                reviews: { score: 4.5, count: 150 },
-                kpis: [{label:"Visibilité", value:"Fluo"}, {label:"Format", value:"500ml"}, {label:"Sens", value:"360°"}],
-                pitch: "Le traceur tout terrain. Bitume, terre, gravier... Il marque partout. Indispensable pour les pros du BTP.",
-                highlights: ["Couleurs Fluo haute visibilité.", "Valve tête en bas.", "Séchage immédiat."],
-                techSpecs: [{label:"Teintes", value:"Rouge/Jaune..."}, {label:"Format", value:"500ml"}, {label:"Adhérence", value:"Sols difficiles"}],
-                businessArgs: [
-                    {label:"Volume", value:"Carton", definition:"Vente par lots aux professionnels."},
-                    {label:"Consommable", value:"Récurrent", definition:"Durée de vie courte = rachat fréquent."},
-                    {label:"Trafic", value:"Pro", definition:"Fait venir les artisans dans le rayon."}
-                ],
-                objections: [{objection:"C'est de la peinture ?", response:"Traceur temporaire spécifique repérage, pas de la déco."}]
-            },
-            {
-                id: 602, univers: 6, brand: "Mondelin", isMDD: false,
-                name: "Traceur de Chantier", target: "BTP Expert",
-                badge: "Santé", ref: "MON-TRC-500", tags: ["Pro", "Technique", "Santé"],
-                reviews: { score: 4.4, count: 80 },
-                kpis: [{label:"Santé", value:"No Xylène"}, {label:"Durée", value:"12 mois"}, {label:"Précision", value:"Top"}],
-                pitch: "La précision du géomètre. Sans Xylène pour la santé de l'utilisateur, et un marquage qui reste lisible 12 mois.",
-                highlights: ["Formule sans Xylène (Santé).", "Capot sécurité tournant.", "Durée 12 mois."],
-                techSpecs: [{label:"Sécurité", value:"Capot"}, {label:"Santé", value:"Sans Xylène"}, {label:"Usage", value:"Pro"}],
-                businessArgs: [
-                    {label:"RSE / Santé", value:"Argument", definition:"Répond aux exigences de sécurité des grands chantiers."},
-                    {label:"Cible", value:"Expert", definition:"Complète l'offre outillage maçonnerie."},
-                    {label:"Qualité", value:"Précision", definition:"Buse fine pour écriture lisible."}
-                ],
-                objections: [{objection:"Inconnu ?", response:"Mondelin est une référence absolue en outillage à main pour le BTP."}]
-            },
-
-            // ===================================
-            // UNIVERS 7 : MULTI-SUPPORTS / COULEUR
-            // ===================================
-            {
-                id: 701, univers: 7, brand: "Dulux Valentine", isMDD: false,
-                name: "Color Touch (Couleur)", target: "Déco Générale",
-                badge: "Notoriété", ref: "DUL-COL-400", tags: ["Déco", "Intérieur", "Premium"],
-                reviews: { score: 4.4, count: 400 },
-                kpis: [{label:"Teintes", value:"Large"}, {label:"Rendu", value:"Lisse"}, {label:"Marque", value:"Top"}],
-                pitch: "La peinture déco sans risque. La marque préférée des français en pot, maintenant en spray. Couvrance et rendu impeccables.",
-                highlights: ["Palette couleurs Dulux.", "Application facile.", "Multi-supports."],
-                techSpecs: [{label:"Finition", value:"Satin/Mat/Brill"}, {label:"Usage", value:"Int/Ext"}, {label:"Séchage", value:"Rapide"}],
-                businessArgs: [
-                    {label:"Réassurance", value:"Marque", definition:"Le client fait confiance à la panthère Dulux."},
-                    {label:"Cohérence", value:"Gamme", definition:"Mêmes noms de teintes que les pots (Cross-sell retouche)."},
-                    {label:"Rotation", value:"Forte", definition:"Les couleurs 'Best' tournent très vite."}
-                ],
-                objections: [{objection:"Prix ?", response:"Le prix de la tranquillité et de la correspondance couleur."}]
-            },
-            {
-                id: 702, univers: 7, brand: "Julien", isMDD: false,
-                name: "Color Touch (Classique)", target: "Bricoleur / Retouche",
-                badge: "Zéro Coulure", ref: "JUL-COL-400", tags: ["Technique", "Réparation", "Intérieur"],
-                reviews: { score: 4.4, count: 650 },
-                kpis: [{label:"Achat", value:"Impulsif"}, {label:"Gamme", value:"RAL"}, {label:"Facilité", value:"Max"}],
-                pitch: "La bombe inratable. Texture gélifiée 'Zéro Coulure'. Idéal pour les bricoleurs qui ont peur de la bombe.",
-                highlights: ["Anti-coulure.", "Nuancier RAL exact.", "Polyvalence."],
-                techSpecs: [{label:"Teintes", value:"RAL"}, {label:"Texture", value:"Gélifiée"}, {label:"Séchage", value:"Rapide"}],
-                businessArgs: [
-                    {label:"Satisfaction", value:"Facilité", definition:"Le client réussit son projet du premier coup."},
-                    {label:"Usage", value:"Retouche", definition:"Les codes RAL permettent les retouches précises (volets, boîtes aux lettres)."},
-                    {label:"Merch", value:"Colorama", definition:"L'effet de masse colore et anime le rayon."}
-                ],
-                objections: [{objection:"Doublon Dulux ?", response:"Julien est plus 'Bricolage/Réparation' (RAL), Dulux plus 'Déco' (Teintes Mode)."}]
-            },
-            {
-                id: 703, univers: 7, brand: "Luxens", isMDD: true,
-                name: "Déco Multisupports", target: "Cœur de gamme",
-                badge: "Rentabilité", ref: "LUX-DEC-400", tags: ["Déco", "Eco", "Intérieur"],
-                reviews: { score: 4.3, count: 1500 },
-                kpis: [{label:"Prix", value:"Top"}, {label:"Choix", value:"Large"}, {label:"Marge", value:"Max"}],
-                pitch: "La déco accessible à tous. Toutes les couleurs, tous les supports, au meilleur prix. Le volume du rayon, c'est lui.",
-                highlights: ["Sans sous-couche.", "Intérieur/Extérieur.", "Large choix couleurs."],
-                techSpecs: [{label:"Séchage", value:"1h"}, {label:"Support", value:"Tout"}, {label:"Résistance", value:"Chocs"}],
-                businessArgs: [
-                    {label:"Volume", value:"Locomotive", definition:"Génère le plus gros trafic du rayon aérosol."},
-                    {label:"Rentabilité", value:"Marge MDD", definition:"Marge unitaire et pourcentuelle optimisée."},
-                    {label:"Gamme", value:"Complète", definition:"Couvre 80% des besoins couleurs standards."}
-                ],
-                objections: [{objection:"Qualité ?", response:"Excellent rapport qualité/prix, suffisant pour la déco courante."}]
-            },
-            {
-                id: 704, univers: 7, brand: "Maison Déco", isMDD: false,
-                name: "Le Blanc (Laque)", target: "Rénov Meuble",
-                badge: "Best Seller", ref: "MD-BLC-400", tags: ["Déco", "Intérieur", "Premium"],
-                reviews: { score: 4.6, count: 500 },
-                kpis: [{label:"Vente", value:"Volume"}, {label:"Rendu", value:"Laque"}, {label:"Couleur", value:"Blanc"}],
-                pitch: "Le Blanc Parfait. Plus qu'une peinture, une laque tendue qui transforme un meuble basique en pièce laquée design.",
-                highlights: ["Rendu Laque Tendu.", "Blancheur éclatante.", "Direct sans sous-couche."],
-                techSpecs: [{label:"Finition", value:"Brill/Sat/Mat"}, {label:"Opacité", value:"Max"}, {label:"Séchage", value:"15 min"}],
-                businessArgs: [
-                    {label:"Rotation", value:"50% Marché", definition:"Le blanc représente la moitié des ventes peinture. Il faut le meilleur."},
-                    {label:"Projet", value:"Meuble", definition:"Déclenche l'achat de rénovation de mobilier."},
-                    {label:"Rendu", value:"Premium", definition:"Justifie un prix supérieur par un aspect 'Laque' visible."}
-                ],
-                objections: [{objection:"Juste du blanc ?", response:"C'est LE blanc de rénovation. Indispensable."}]
-            },
-            {
-                id: 705, univers: 7, brand: "Richard", isMDD: false,
-                name: "Multi-supports Pro", target: "Pro / Difficile",
-                badge: "Technique", ref: "RIC-PRO-400", tags: ["Technique", "Pro", "Réparation"],
-                reviews: { score: 4.9, count: 110 },
-                kpis: [{label:"Accroche", value:"Max"}, {label:"Cible", value:"Pro"}, {label:"SAV", value:"0"}],
-                pitch: "L'adhérence absolue. PVC, Alu, Galva... Là où les autres pèlent, Richard tient. La bombe que les pros gardent dans le camion.",
-                highlights: ["Haute adhésion supports lisses.", "Acrylique solvantée Pro.", "Séchage cœur rapide."],
-                techSpecs: [{label:"Supports", value:"PVC, Alu..."}, {label:"Chimie", value:"Pro"}, {label:"Séchage", value:"2h"}],
-                businessArgs: [
-                    {label:"Crédibilité", value:"Pro", definition:"Marque d'outillage peintre reconnue, rassure l'artisan."},
-                    {label:"Fidélité", value:"Récurrence", definition:"Une fois testé sur un chantier difficile, le pro ne change plus."},
-                    {label:"Solution", value:"Technique", definition:"Le produit qui sauve les chantiers compliqués (plastiques, alu)."}
-                ],
-                objections: [{objection:"Packaging moche ?", response:"Code visuel 'Pro'. Inspire l'efficacité technique, pas la déco."}]
-            },
-            {
-                id: 706, univers: 7, brand: "Luxens", isMDD: true,
-                name: "Aquaéo (Base Eau)", target: "Chambre / Santé",
-                badge: "RSE", ref: "LUX-AQU-400", tags: ["Eco", "Santé", "Intérieur"],
-                reviews: { score: 4.6, count: 980 },
-                kpis: [{label:"Odeur", value:"Nulle"}, {label:"COV", value:"Min"}, {label:"Nettoyage", value:"Eau"}],
-                pitch: "La peinture qui ne sent rien. Enfin une bombe utilisable en appartement habité. L'argument massue pour les familles.",
-                highlights: ["Base Eau (90% solvants en moins).", "Faible odeur.", "Nettoyage eau."],
-                techSpecs: [{label:"Base", value:"Aqueuse"}, {label:"COV", value:"A+"}, {label:"Séchage", value:"30 min"}],
-                businessArgs: [
-                    {label:"Tendance", value:"RSE", definition:"Répond à la demande forte de produits sains/écologiques."},
-                    {label:"Réassurance", value:"Famille", definition:"Le seul produit qu'on ose conseiller pour une chambre de bébé."},
-                    {label:"Futur", value:"Normes", definition:"Prend de l'avance sur les restrictions solvants."}
-                ],
-                objections: [{objection:"Moins solide ?", response:"Non, les résines modernes sont aussi dures que les solvantées."}]
-            },
-
-            // ===================================
-            // UNIVERS 8 : RADIATEURS / ÉLECTRO / SPÉCIFIQUE
-            // ===================================
-            {
-                id: 801, univers: 8, brand: "Maison Déco", isMDD: false,
-                name: "Relook Radiateurs", target: "Rénov Chauffage",
-                badge: "Spécifique", ref: "MD-RAD-400", tags: ["Technique", "Spécialiste", "Déco"],
-                reviews: { score: 4.5, count: 400 },
-                kpis: [{label:"Temp", value:"120°C"}, {label:"Jaunissement", value:"Non"}, {label:"Rendu", value:"Satin"}],
-                pitch: "Ne changez pas, relookez. Une laque spécifique qui ne jaunit pas et résiste à la chaleur douce. Pour des radiateurs comme neufs.",
-                highlights: ["Résiste 120°C.", "Anti-jaunissement.", "Antirouille intégré."],
-                techSpecs: [{label:"Temp", value:"120°C"}, {label:"Support", value:"Acier/Fonte"}, {label:"Finition", value:"Satin"}],
-                businessArgs: [
-                    {label:"Projet", value:"Eco", definition:"Alternative économique au remplacement de radiateurs."},
-                    {label:"Panier", value:"Volume", definition:"Il faut souvent 2-3 sprays pour un appartement."},
-                    {label:"Saison", value:"Automne", definition:"Pic de ventes avant la remise en route du chauffage."}
-                ],
-                objections: [{objection:"Différence avec HT ?", response:"HT est pour le feu (600°C). Ici c'est pour l'eau chaude (120°C), plus blanc, plus beau."}]
-            },
-            {
-                id: 802, univers: 8, brand: "Luxens", isMDD: true,
-                name: "Peinture Radiateur", target: "Rénov Éco",
-                badge: "Prix", ref: "LUX-RAD-400", tags: ["Technique", "Eco", "Intérieur"],
-                reviews: { score: 4.3, count: 1200 },
-                kpis: [{label:"Prix", value:"Top"}, {label:"Volume", value:"Fort"}, {label:"Temp", value:"80°C"}],
-                pitch: "Le coup de blanc indispensable. Pour rafraîchir les convecteurs jaunis à moindre coût. Simple, efficace.",
-                highlights: ["Résiste 80°C.", "Direct rouille.", "Protection rayures."],
-                techSpecs: [{label:"Temp", value:"80°C"}, {label:"Finition", value:"Brill/Sat/Mat"}, {label:"Support", value:"Tuyaux"}],
-                businessArgs: [
-                    {label:"Volume", value:"Masse", definition:"Gros volumes hivernaux sur ce produit d'entretien."},
-                    {label:"Rentabilité", value:"MDD", definition:"Marge pure sur un produit basique."},
-                    {label:"Accessibilité", value:"Prix", definition:"Permet l'entretien à petit prix."}
-                ],
-                objections: [{objection:"Seulement 80°C ?", response:"Suffisant pour les radiateurs à eau standards."}]
-            },
-            {
-                id: 803, univers: 8, brand: "Luxens", isMDD: true,
-                name: "Peinture Électroménager", target: "Home Staging Cuisine",
-                badge: "Malin", ref: "LUX-ELEC-400", tags: ["Spécialiste", "Déco", "Eco"],
-                reviews: { score: 4.1, count: 350 },
-                kpis: [{label:"Rendu", value:"Inox"}, {label:"Prix", value:"Top"}, {label:"Effet", value:"Wow"}],
-                pitch: "Transformez un frigo blanc en Inox pour 10€. La solution la moins chère pour moderniser une cuisine. Effet bluffant.",
-                highlights: ["Aspect Inox Satiné ou Blanc.", "Qualité industrielle.", "Lavable."],
-                techSpecs: [{label:"Rendu", value:"Inox/Blanc"}, {label:"Couche", value:"Mono"}, {label:"Résist.", value:"Nettoyage"}],
-                businessArgs: [
-                    {label:"Positionnement", value:"Anti-crise", definition:"Rénover vs Acheter neuf. Argument fort en période d'inflation."},
-                    {label:"Différenciation", value:"MDD", definition:"Produit malin introuvable en grande surface alimentaire."},
-                    {label:"Satisfaction", value:"Transformation", definition:"Résultat visuel immédiat très gratifiant pour le client."}
-                ],
-                objections: [{objection:"Ça tient au nettoyage ?", response:"Oui, c'est une laque dure conçue pour l'entretien ménager."}]
-            },
-            {
-                id: 804, univers: 8, brand: "Julien", isMDD: false,
-                name: "Masque-Taches", target: "Sinistre / Dégâts",
-                badge: "Sauveur", ref: "JUL-MSQ-400", tags: ["Technique", "Réparation", "Intérieur"],
-                reviews: { score: 4.8, count: 670 },
-                kpis: [{label:"Urgence", value:"Oui"}, {label:"Efficacité", value:"100%"}, {label:"Prix", value:"Accepté"}],
-                pitch: "L'effaceur de sinistres. Café, suie, humidité... rien ne ressort. Le miracle qui sauve la mise avant de repeindre.",
-                highlights: ["Bloque toutes taches.", "Valve multidirectionnelle (Plafond).", "Ne jaunit pas."],
-                techSpecs: [{label:"Action", value:"Isolante"}, {label:"Support", value:"Plâtre/Bois"}, {label:"Usage", value:"Primaire"}],
-                businessArgs: [
-                    {label:"Indispensable", value:"Service", definition:"Produit de dépannage obligatoire en rayon."},
-                    {label:"Sensibilité Prix", value:"Nulle", definition:"Achat de nécessité urgente, le prix importe peu."},
-                    {label:"Fidélisation", value:"Confiance", definition:"Le produit qui résout le problème renforce la confiance en l'enseigne."}
-                ],
-                objections: [{objection:"Peinture classique suffit ?", response:"Non, les taches traversent. Il faut ce bloqueur spécifique."}]
-            },
-
-            // ===================================
-            // UNIVERS 9 : VERNIS
-            // ===================================
-            {
-                id: 901, univers: 9, brand: "Soloplast", isMDD: false,
-                name: "Vernis Finition", target: "Protection",
-                badge: "Qualité", ref: "SOL-VER-400", tags: ["Finition", "Technique"],
-                reviews: { score: 4.4, count: 410 },
-                kpis: [{label:"Panier +", value:"15%"}, {label:"SAV", value:"Baisse"}, {label:"Rendu", value:"Mat"}],
-                pitch: "L'assurance vie de la peinture. Matifie et protège durablement. Le geste final pour un travail pro.",
-                highlights: ["Haute résistance.", "Finition Mat élégante.", "Séchage rapide."],
-                techSpecs: [{label:"Finition", value:"Mat"}, {label:"Usage", value:"Sur peinture"}, {label:"Protection", value:"Chocs"}],
-                businessArgs: [
-                    {label:"Cross-Selling", value:"Facile", definition:"'Voulez-vous protéger votre travail ?' = +1 vente."},
-                    {label:"Satisfaction", value:"Durabilité", definition:"Évite les réclamations sur la tenue de la peinture."},
-                    {label:"Merch", value:"Caisse", definition:"Produit d'oubli à placer en sortie de rayon."}
-                ],
-                objections: [{objection:"Utile en intérieur ?", response:"Oui, pour tous les objets manipulés (vases, chaises)."}]
-            },
-            {
-                id: 902, univers: 9, brand: "Luxens", isMDD: true,
-                name: "Vernis Multisupports", target: "Protection Éco",
-                badge: "Prix", ref: "LUX-VER-400", tags: ["Finition", "Eco", "Intérieur"],
-                reviews: { score: 4.2, count: 850 },
-                kpis: [{label:"Prix", value:"Top"}, {label:"Choix", value:"3 Finitions"}, {label:"Marge", value:"MDD"}],
-                pitch: "Protégez tout, simplement. Bois, métal, peintures... Un vernis universel à prix Luxens.",
-                highlights: ["Brillant, Satin, Mat.", "Séchage rapide.", "Protection taches."],
-                techSpecs: [{label:"Finition", value:"3 choix"}, {label:"Usage", value:"Int/Ext"}, {label:"Rendement", value:"Standard"}],
-                businessArgs: [
-                    {label:"Volume", value:"Standard", definition:"Le vernis de base du rayon."},
-                    {label:"Rentabilité", value:"Marge", definition:"Marge pure sur un complément de vente."},
-                    {label:"Polyvalence", value:"Stock", definition:"Un seul produit pour tous les usages."}
-                ],
-                objections: [{objection:"Jaunit ?", response:"Non, formule stable aux UV intérieurs."}]
+                phase: "PHASE 4 : LOGISTIQUE & RENTABILITÉ",
+                subtitle: "Le Closing",
+                color: "border-orange-500 text-orange-700 bg-orange-50",
+                icon: "truck",
+                questions: [
+                    "Au niveau opérationnel, rencontrez-vous des difficultés de réassort sur les produits de niche à cause de minimums de commande trop élevés chez vos fournisseurs actuels ?",
+                    "Si vous deviez introduire une nouvelle gamme technique, privilégiez-vous une intégration au fond de rayon ou une mise en avant via des box promotionnels ?",
+                    "Quel est le 'prix psychologique' maximum que votre client type est prêt à mettre pour un aérosol technique de haute qualité ?",
+                    "Pour construire notre partenariat, quel niveau de marge (en % ou coefficient) visez-vous impérativement sur cette famille d'accessoires ?",
+                    "Si je peux vous garantir une gamme technique exclusive (Zinc/Gladio) qui respecte vos objectifs de marge et résout vos contraintes logistiques, qu'est-ce qui nous empêcherait de lancer un test ?"
+                ]
             }
         ];
 
-        const universMap = {
-            1: { label: "Métal & Antirouille", icon: "hammer" },
-            2: { label: "Carrosserie & Auto", icon: "car" },
-            3: { label: "Déco & Effets", icon: "palette" },
-            4: { label: "Extérieur & Galva", icon: "construction" },
-            5: { label: "Haute Température", icon: "flame" },
-            6: { label: "Marquage", icon: "pen-tool" },
-            7: { label: "Multi-supports / Couleur", icon: "brush" },
-            8: { label: "Radiateurs / Spécifique", icon: "thermometer" },
-            9: { label: "Vernis", icon: "layers" }
-        };
+        // --- DONNÉES PRODUITS (10+ ARGUMENTS BIZ) ---
+        const productsData = [
+            // GROUPE 1: DÉCORATION
+            {
+                id: 101, univers: 1, fiche: 1, name: "Pintura DECO (Bricolage)", ref: "PDRA",
+                tags: ["Bricolage", "Déco", "Volume", "Eco"],
+                kpis: [{label:"Rotation", value:"Max"}, {label:"Prix", value:"Appel"}, {label:"Marge", value:"Volume"}],
+                pitch: "L'émail alkyde universel petit format. Le produit d'appel parfait pour déclencher l'achat d'impulsion sans réfléchir.",
+                techSpecs: [{label:"Base", value:"Alkyde Modifié"}, {label:"Format", value:"250ml / 400ml"}, {label:"Valve", value:"Autonettoyante"}],
+                techDescription: "Base Alkyde modifiée : Séchage plus rapide qu'un synthétique classique mais garde la souplesse et la brillance. Idéal bois/métal.",
+                colors: ["RAL 1013 Marfil (Ivoire)", "RAL 1016 Amarillo (Jaune)", "RAL 3003 Rojo (Rouge)", "RAL 5005 Azul (Bleu)", "RAL 6005 Verde (Vert)", "RAL 9005 Negro (Noir)", "RAL 9010 Blanco (Blanc)", "Oro Rico", "Plata Cromo"],
+                businessArgs: [
+                    {label:"1. Rotation Stock", value:"Très Forte", definition:"Le format 250ml tourne 3x plus vite que le 400ml sur les petits projets (retouches)."},
+                    {label:"2. Prix Psychologique", value:"< 5€", definition:"Un prix facial bas qui lève tous les freins à l'achat pour le bricoleur occasionnel."},
+                    {label:"3. Couverture Besoin", value:"80/20", definition:"Une gamme resserrée sur les 15 RAL qui font 80% du volume national. Pas de stock mort."},
+                    {label:"4. Rentabilité Linéaire", value:"Max", definition:"Le petit diamètre permet de doubler le nombre de facings au mètre linéaire."},
+                    {label:"5. Fidélisation", value:"Qualité", definition:"Le pouvoir couvrant supérieur aux premiers prix importés fidélise le client."},
+                    {label:"6. Complémentarité", value:"MDD", definition:"Ne cannibalise pas votre MDD 400ml. C'est une offre complémentaire pour les petits projets."},
+                    {label:"7. Polyvalence", value:"Max", definition:"Convient aussi bien au bois, au métal qu'à la pierre. Simplifie le conseil vendeur."},
+                    {label:"8. Marge", value:"Volume", definition:"Produit d'appel idéal pour générer du trafic dans le rayon peinture."},
+                    {label:"9. Logistique", value:"Flexible", definition:"Pas de minimum de commande prohibitif, réassort facile."},
+                    {label:"10. RSE", value:"A+", definition:"Produit noté A+ pour les émissions dans l'air intérieur."},
+                    {label:"11. Merchandising", value:"Vrac", definition:"Idéal en bacs à fouille ou têtes de gondole pour l'achat coup de cœur."},
+                    {label:"12. Usage", value:"Scolaire", definition:"Format adapté aux projets scolaires et loisirs créatifs."}
+                ],
+                objections: [{objection:"On a déjà une MDD.", response:"Notre 250ml est un complément d'achat (retouche), pas un concurrent de vos 400ml."}]
+            },
+            {
+                id: 102, univers: 1, fiche: 1, name: "Pintura RAL Acrílica HS", ref: "RAL",
+                tags: ["Industrie", "Pro", "Technique", "RAL"],
+                kpis: [{label:"Qualité", value:"HS Pro"}, {label:"Brillance", value:"Top"}, {label:"Durée", value:"Longue"}],
+                pitch: "Ne perdez plus les clients Pros. Une gamme RAL Acrylique 'High Solid' pour l'industrie et la maintenance exigeante.",
+                techSpecs: [{label:"Base", value:"Acrylique HS"}, {label:"Extrait", value:"Élevé"}, {label:"Norme", value:"DIN"}],
+                techDescription: "High Solid = Haut extrait sec. Plus de pigments/résine, moins de solvant. Couvre en 1 passe là où d'autres en mettent 2.",
+                colors: ["RAL 1000 à 9000 (Nuancier Industriel Complet) - Plus de 50 teintes stockées"],
+                businessArgs: [
+                    {label:"1. Cible B2B", value:"Pro", definition:"Le produit indispensable pour attirer les artisans et la maintenance industrielle."},
+                    {label:"2. Panier Moyen", value:"Élevé", definition:"Le client pro achète par cartons de 6 pour ses chantiers."},
+                    {label:"3. Service", value:"Dépannage", definition:"Avoir le bon RAL en stock (ex: 7016 Anthracite) sauve le chantier du client."},
+                    {label:"4. Marge", value:"Valorisée", definition:"Produit technique vendu plus cher que la déco standard. Marge en valeur absolue très intéressante."},
+                    {label:"5. Productivité", value:"Gain", definition:"Séchage et couvrant express = gain de main d'œuvre pour le pro."},
+                    {label:"6. Catalogue", value:"Huge", definition:"Le plus large choix de RAL du marché disponible en stock."},
+                    {label:"7. Cross-Sell", value:"B2B", definition:"Se vend souvent avec des abrasifs et des rubans de masquage pro."},
+                    {label:"8. Qualité Perçue", value:"HS", definition:"L'argument 'High Solid' justifie un prix supérieur et évite la comparaison frontale."},
+                    {label:"9. Fidélité", value:"Marque", definition:"Les pros sont fidèles à une marque qui couvre bien et ne coule pas."},
+                    {label:"10. Conformité", value:"Normes", definition:"Respecte les codes couleurs industriels exacts (tuyauterie, sécurité)."},
+                    {label:"11. Image", value:"Expert", definition:"Positionne le rayon comme un fournisseur technique sérieux."}
+                ],
+                objections: [{objection:"Trop de références ?", response:"On cible les 20/30 RAL indispensables en maintenance, pas l'exotique."}]
+            },
+            {
+                id: 103, univers: 1, fiche: 2, name: "Home Staging (Electro/Radiateur)", ref: "PDRA",
+                tags: ["Rénovation", "Home Staging", "Cuisine", "Radiateur", "Eco"],
+                kpis: [{label:"Temp", value:"130°C"}, {label:"Rendu", value:"Inox/Blanc"}, {label:"Fonction", value:"Rénover"}],
+                pitch: "Surfez sur la vague de la rénovation. Pourquoi jeter quand on peut repeindre un frigo ou un radiateur pour 10€ ?",
+                techSpecs: [{label:"Radiateur", value:"130°C"}, {label:"Electro", value:"Anti-choc"}, {label:"Antimanchas", value:"Isolant"}],
+                techDescription: "Radiateur : Additifs anti-jaunissement. Electro : Laque dure résistante aux chocs. Antimanchas : Bloque les remontées.",
+                colors: ["Blanc Electroménager, Inox Electroménager, Blanc Radiateurs, Blanc Anti-tâches"],
+                businessArgs: [
+                    {label:"1. Tendance", value:"Pouvoir d'Achat", definition:"En période d'inflation, rénover (15€) coûte 20x moins cher que remplacer (300€)."},
+                    {label:"2. Panier Projet", value:"Multi", definition:"Produit déclencheur d'un projet de rénovation cuisine/salle de bain."},
+                    {label:"3. Différenciation", value:"Expertise", definition:"Peu d'enseignes proposent l'Inox Electroménager ou l'Anti-tâches en spray."},
+                    {label:"4. Saisonnalité", value:"Hiver", definition:"Le spray Radiateur est un best-seller incontournable dès les premiers froids."},
+                    {label:"5. Dépannage", value:"Locatif", definition:"L'Antimanchas est le sauveur des états des lieux de sortie pour les locataires."},
+                    {label:"6. RSE", value:"Durabilité", definition:"Prolonge la durée de vie des appareils (Anti-gaspillage)."},
+                    {label:"7. Marge", value:"Niche", definition:"Produits spécifiques à forte valeur ajoutée."},
+                    {label:"8. Facilité", value:"DIY", definition:"Permet au particulier de réussir une rénovation pro sans outils."},
+                    {label:"9. Exclusivité", value:"Offre", definition:"L'Inox Electroménager est un produit rare qui crée la préférence."},
+                    {label:"10. Cross-Merch", value:"Cuisine", definition:"Peut être implanté au rayon Cuisine ou Chauffage en cross-merchandising."},
+                    {label:"11. Satisfaction", value:"Avis", definition:"Produits à effet 'Avant/Après' qui génèrent de très bons avis clients."}
+                ],
+                objections: [{objection:"Ça tient sur un frigo ?", response:"Oui, formulé pour résister aux coups et au nettoyage fréquent."}]
+            },
+            {
+                id: 104, univers: 1, fiche: 3, name: "Effets & Signalétique", ref: "PS",
+                tags: ["Déco", "Sécurité", "Visibilité"],
+                kpis: [{label:"Visibilité", value:"Sécu"}, {label:"Effet", value:"Or/Arg"}, {label:"Tech", value:"Nuit"}],
+                pitch: "La sécurité et la fête. Du balisage d'entrepôt obligatoire à la décoration de Noël, une gamme qui vit toute l'année.",
+                techSpecs: [{label:"Fluo", value:"Haute Visibilité"}, {label:"Luminiscent", value:"Brille 6h"}, {label:"Reflectivo", value:"Billes verre"}],
+                techDescription: "Pigments techniques : Fluo (réagit aux UV), Phosphorescent (stocke la lumière), Rétro-réfléchissant (renvoie la lumière).",
+                colors: ["Or Riche, Argent Chrome, Fluo (Jaune/Orange/Rouge/Vert/Bleu), Photoluminescent, Reflechissant"],
+                businessArgs: [
+                    {label:"1. Marché Réglementaire", value:"Sécurité", definition:"Les entreprises ont l'obligation légale de baliser les zones de danger."},
+                    {label:"2. Saisonnalité", value:"Fêtes", definition:"Explosion des ventes Or/Argent/Fluo en fin d'année (Noël/Halloween)."},
+                    {label:"3. Marge", value:"++", definition:"Produits à très forte marge unitaire (faible sensibilité prix)."},
+                    {label:"4. Innovation", value:"Image", definition:"Le spray Réflechissant positionne votre rayon comme innovant."},
+                    {label:"5. Cible Mixte", value:"B2B/B2C", definition:"Vendable au pro (sécurité) comme au particulier (déco, vélo)."},
+                    {label:"6. Achat d'Impulsion", value:"Coup de cœur", definition:"Produits visuels qui déclenchent l'achat spontané."},
+                    {label:"7. Usage", value:"Sport", definition:"Le Reflectivo cible aussi les cyclistes et joggeurs (sécurité urbaine)."},
+                    {label:"8. Complémentarité", value:"Loisirs", definition:"Lien fort avec le rayon Loisirs Créatifs."},
+                    {label:"9. Exclusivité", value:"Tech", definition:"Le Reflectivo est rare en rayon GSB."},
+                    {label:"10. Rotation", value:"Ponctuelle", definition:"Fortes pointes de ventes saisonnières prévisibles."},
+                    {label:"11. Animation", value:"Théâtralisation", definition:"Permet de créer des têtes de gondole thématiques attractives."}
+                ],
+                objections: [{objection:"Fluo fragile ?", response:"Nécessite un fond blanc pour un éclat maximal."}]
+            },
 
-        const tagMap = {
-            "Technique": "bg-slate-200 text-slate-800",
-            "Déco": "bg-purple-100 text-purple-800",
-            "Pro": "bg-gray-800 text-white",
-            "Eco": "bg-green-100 text-green-800",
-            "Extérieur": "bg-blue-100 text-blue-800",
-            "Intérieur": "bg-pink-100 text-pink-800",
-            "Premium": "bg-yellow-100 text-yellow-800",
-            "Réparation": "bg-red-100 text-red-800",
-            "Spécialiste": "bg-orange-100 text-orange-800",
-            "Finition": "bg-teal-100 text-teal-800"
-        };
+            // GROUPE 2: MÉTAL
+            {
+                id: 201, univers: 2, fiche: 4, name: "Galvanisation (Zinc)", ref: "RGA",
+                tags: ["Métal", "Protection", "Galva", "Industrie", "Soudure"],
+                kpis: [{label:"Zinc", value:"98%"}, {label:"Protect", value:"Cathode"}, {label:"Type", value:"Pro"}],
+                pitch: "L'assurance vie du métal. 98% de Zinc pur pour une véritable galvanisation à froid. Le consommable n°1 des serruriers.",
+                techSpecs: [{label:"Zinc Mate", value:"98% Zinc"}, {label:"Zinc Brillant", value:"Zn+Alu"}, {label:"Format", value:"400ml/4L"}],
+                techDescription: "Protection par anode sacrificielle : en présence d'eau, c'est le zinc qui s'oxyde pour protéger l'acier. Norme industrielle.",
+                colors: ["Zinc Mat (Gris Industriel - Protection Max), Zinc Brillant (Aspect Alu Neuf)"],
+                businessArgs: [
+                    {label:"1. Indispensable", value:"Pro", definition:"Aucun serrurier, métallier ou chauffagiste ne quitte un chantier sans sa bombe de Galva."},
+                    {label:"2. Volume", value:"Consommable", definition:"Ce n'est pas un achat unique, c'est un consommable de chantier à forte rotation."},
+                    {label:"3. Cross-Merchandising", value:"Outil", definition:"À placer impérativement au rayon Outillage/Soudure pour doubler les ventes."},
+                    {label:"4. Choix", value:"Double", definition:"Proposer Mat (Protection Max) ET Brillant (Esthétique) couvre 100% des besoins."},
+                    {label:"5. Format", value:"Industrie", definition:"Disponible en pot de 4L pour les gros chantiers (sur commande). Crédibilise l'offre."},
+                    {label:"6. Fidélisation", value:"Qualité", definition:"La teneur en Zinc à 98% garantit une protection réelle et durable."},
+                    {label:"7. Cible", value:"Mixte", definition:"Pro (Soudure) et Particulier (Portail, Gouttière)."},
+                    {label:"8. Marge", value:"Volume", definition:"Produit de volume à marge constante."},
+                    {label:"9. Réassort", value:"Régulier", definition:"Produit fond de rayon qui ne dort jamais, été comme hiver."},
+                    {label:"10. Sécurité", value:"Norme", definition:"Conforme aux exigences de protection cathodique."},
+                    {label:"11. Ticket", value:"Additionnel", definition:"S'ajoute systématiquement à l'achat de profilés métal."}
+                ],
+                objections: [{objection:"Brillant ou Mat ?", response:"Mat = + de Zinc (Protection). Brillant = + Esthétique."}]
+            },
+            {
+                id: 202, univers: 2, fiche: 5, name: "Finitions Métal Spéciales", ref: "RGA",
+                tags: ["Métal", "Finition", "Spécifique", "Industrie"],
+                kpis: [{label:"Inox", value:"18/10"}, {label:"Cuivre", value:"Conduct"}, {label:"Aspect", value:"Chrome"}],
+                pitch: "Des solutions introuvables ailleurs. Inox 18/10 pour l'alimentaire, Cuivre conducteur. La réponse aux moutons à 5 pattes.",
+                techSpecs: [{label:"Inox", value:"Chrome/Nickel"}, {label:"Cuivre", value:"Conducteur"}, {label:"Plata", value:"Laminaire"}],
+                techDescription: "Vraies poudres métalliques. Inox 18/10 résiste aux acides. Cuivre conduit l'électricité (soudure par point).",
+                colors: ["Inox 18/10, Acier Effet Inox, Argent Galvanique, Cuivre Galvanique"],
+                businessArgs: [
+                    {label:"1. Différenciation", value:"Totale", definition:"Produits que vos concurrents ne référencent pas. Vous devenez la destination 'Expert'."},
+                    {label:"2. Maintenance", value:"Usine", definition:"L'Inox 18/10 est vital pour la maintenance en milieu alimentaire, vinicole ou chimique."},
+                    {label:"3. Esthétique", value:"Finition", definition:"L'Acier Effet Inox permet de moderniser des objets standards (rampes)."},
+                    {label:"4. Marge", value:"Forte", definition:"Le client ne discute pas le prix d'un produit technique qui sauve son chantier."},
+                    {label:"5. Service", value:"Solution", definition:"Répond à des problèmes techniques précis (soudure, corrosion acide)."},
+                    {label:"6. Cible", value:"Plombier", definition:"Le Cobre est indispensable pour les finitions de tuyauterie cuivre apparentes."},
+                    {label:"7. Image", value:"Pro", definition:"Renforce l'image de spécialiste du rayon."},
+                    {label:"8. Niche", value:"Rentable", definition:"Faibles volumes mais très forte marge unitaire."},
+                    {label:"9. Exclusivité", value:"Offre", definition:"Produit introuvable en GSA."},
+                    {label:"10. Innovation", value:"Tech", definition:"Formulations spécifiques haute performance."},
+                    {label:"11. Polyvalence", value:"Déco/Tech", definition:"L'aspect cuivre est aussi très tendance en déco industrielle."}
+                ],
+                objections: [{objection:"Inox ou Effet Inox ?", response:"Inox 18/10 contient du vrai métal (protection chimique), Effet Inox est une peinture esthétique brillante."}]
+            },
+            {
+                id: 203, univers: 2, fiche: 6, name: "Haute Température", ref: "PA",
+                tags: ["Chaleur", "Technique", "Auto", "Spécifique"],
+                kpis: [{label:"Temp", value:"600°C"}, {label:"Gamme", value:"Large"}, {label:"Rendu", value:"Satin"}],
+                pitch: "Résiste au feu sans broncher. La gamme la plus large du marché : du Noir classique au Rouge Ferrari pour le tuning.",
+                techSpecs: [{label:"Résistance", value:"600°C"}, {label:"Résistance 2", value:"500°C (Ind.)"}, {label:"Base", value:"Silicone"}],
+                techDescription: "Résines silicones qui vitrifient à la chaleur (>150°C). Ne pèlent pas, ne craquent pas sous la dilatation.",
+                colors: ["Noir, Argent, Blanc, Rouge, Jaune, Bleu, Gris Anthracite, Vernis HT"],
+                businessArgs: [
+                    {label:"1. Gamme", value:"Unique", definition:"FM Spray est un des seuls à proposer Rouge/Jaune/Bleu en Haute Température (Tuning)."},
+                    {label:"2. Saisonnalité", value:"Lissée", definition:"Produit '4 Saisons' : Poêles/Inserts en hiver, Barbecues et Motos en été."},
+                    {label:"3. Marché", value:"Tuning", definition:"Les couleurs vives ciblent spécifiquement les passionnés auto (étriers de freins, moteurs)."},
+                    {label:"4. Volume", value:"Noir", definition:"Le Noir 600° est le produit de fond de rayon incontournable en fumisterie."},
+                    {label:"5. Vente Liée", value:"Vernis", definition:"Le Vernis HT est un produit additionnel malin pour protéger le métal brut ou les pièces polies."},
+                    {label:"6. Cible", value:"Passion", definition:"Touche les passionnés de mécanique et de rénovation."},
+                    {label:"7. Sécurité", value:"Norme", definition:"Résistance 600°C garantie, évite les retours SAV pour cloquage."},
+                    {label:"8. Marge", value:"Correcte", definition:"Bon équilibre volume/marge sur un produit technique."},
+                    {label:"9. Complément", value:"Chauffage", definition:"À placer aussi au rayon poêles à bois / cheminées."},
+                    {label:"10. Choix", value:"Large", definition:"La plus grande profondeur de gamme du marché."},
+                    {label:"11. Tendance", value:"Gris", definition:"Le Gris Anthracite HT correspond aux nouveaux poêles designs."}
+                ],
+                objections: [{objection:"Couleurs résistantes ?", response:"Oui, nous utilisons des pigments inorganiques spécifiques qui ne changent pas de couleur à la chaleur."}]
+            },
 
-        // --- STATE & LOGIC ---
-        let activeUnivers = 1;
-        let activeTag = null; // Nouveau filtre Tag
-        let searchTerm = "";
+            // GROUPE 3: AUTO / AGRI
+            {
+                id: 301, univers: 3, fiche: 7, name: "Auto & Jantes", ref: "PAA",
+                tags: ["Auto", "Réparation", "Jantes", "Technique"],
+                kpis: [{label:"Résist.", value:"Essence"}, {label:"Rendu", value:"Carrossier"}, {label:"Jantes", value:"Métal"}],
+                pitch: "La qualité carrossier. Résiste à l'essence (argument clé) et aux rayures. Pour rénover sa voiture avant la revente.",
+                techSpecs: [{label:"Base", value:"Acrylique Auto"}, {label:"Résist.", value:"Hydrocarbures"}, {label:"Vernis", value:"Bi-couche"}],
+                techDescription: "Système professionnel : Base mate à vernir ou Brillant direct. Résistance chimique supérieure aux sprays déco.",
+                colors: ["Noir (Brill/Mat), Blanc, Argent Jantes, Or Jantes, Vernis Bi-Capa"],
+                businessArgs: [
+                    {label:"1. Argument Choc", value:"Essence", definition:"'Ne fond pas avec l'essence'. C'est le seul argument qui compte pour un motard ou un mécano."},
+                    {label:"2. Valorisation", value:"Revente", definition:"Permet au client de rénover des jantes pour vendre sa voiture plus cher. ROI immédiat."},
+                    {label:"3. Cross-Sell", value:"Système", definition:"Vendre la Base + le Vernis Bi-Capa. C'est le système pro, donc une double vente systématique."},
+                    {label:"4. Marché", value:"Vaste", definition:"Le parc auto vieillissant favorise la réparation DIY économique."},
+                    {label:"5. Finitions", value:"Vernis", definition:"Proposer le vernis en Mat/Satin/Brillant permet de matcher toutes les finitions auto modernes."},
+                    {label:"6. Cible", value:"Passion", definition:"Clientèle prête à payer pour la qualité."},
+                    {label:"7. Marge", value:"Tech", definition:"Produits à forte valeur ajoutée."},
+                    {label:"8. Exclusivité", value:"Jantes", definition:"Le spray Jantes Or/Argent est un best-seller."},
+                    {label:"9. Rendu", value:"Pro", definition:"Qualité équivalente à une peinture pistolet si bien appliquée."},
+                    {label:"10. Gamme", value:"Claire", definition:"Des basiques indispensables (Noir, Blanc, Jantes) sans stock inutile."},
+                    {label:"11. Trafic", value:"Jeune", definition:"Attire une clientèle jeune (Tuning/Scooter) en magasin."}
+                ],
+                objections: [{objection:"Vernis obligatoire ?", response:"Oui sur métallisé pour la protection UV."}]
+            },
+            {
+                id: 302, univers: 3, fiche: 8, name: "Préparation Carrosserie", ref: "PAA",
+                tags: ["Auto", "Préparation", "Technique"],
+                kpis: [{label:"Fonction", value:"Apprêt"}, {label:"Support", value:"Plastique"}, {label:"Type", value:"2K"}],
+                pitch: "La base d'un travail réussi. Apprêts garnissants, accroche plastique et Epoxi 2K.",
+                techSpecs: [{label:"Filler", value:"Garnissant"}, {label:"Plastique", value:"Accroche"}, {label:"Epoxi", value:"2K"}],
+                techDescription: "Filler : Comble les rayures. Plastique : Mord le support. Epoxi 2K : Bicomposant chimique ultra-résistant.",
+                colors: ["Apprêt Garnissant Beige, Primaire Plastique Transp., Apprêt Antirouille, Epoxi 2K Gris"],
+                businessArgs: [
+                    {label:"1. Expertise", value:"2K", definition:"L'Epoxi 2K positionne votre enseigne comme une vraie alternative aux distributeurs pros."},
+                    {label:"2. Indispensable", value:"Plastique", definition:"Impossible de peindre un pare-chocs sans primaire plastique. Vente additionnelle sûre."},
+                    {label:"3. Volume", value:"Conso", definition:"L'apprêt garnissant se consomme en quantité (plus que la peinture) pour lisser les défauts."},
+                    {label:"4. Solution", value:"Complète", definition:"Offrir la chaîne complète (Prépa > Peinture > Vernis) rassure le client."},
+                    {label:"5. Marge", value:"Tech", definition:"Produits de spécialité à forte marge."},
+                    {label:"6. Qualité", value:"Pro", definition:"Produits issus de la carrosserie professionnelle, adaptés au format spray."},
+                    {label:"7. Cible", value:"Réparateur", definition:"Attire les bricoleurs avertis qui réparent eux-mêmes."},
+                    {label:"8. Fidélisation", value:"Résultat", definition:"Une bonne préparation garantit un bon résultat, donc un client content."},
+                    {label:"9. Exclusivité", value:"2K", definition:"Technologie rare en rayon grand public."},
+                    {label:"10. Cross-Merch", value:"Auto", definition:"À placer avec les mastics, abrasifs et rubans de masquage."},
+                    {label:"11. Technique", value:"Revente", definition:"Permet de réparer des pièces coûteuses au lieu de les changer."}
+                ],
+                objections: [{objection:"C'est quoi 2K ?", response:"Bicomposant avec durcisseur intégré."}]
+            },
+            {
+                id: 303, univers: 3, fiche: 9, name: "Agricole & TP", ref: "PAG",
+                tags: ["Agricole", "Chantier", "Pro", "Spécifique"],
+                kpis: [{label:"Couleur", value:"Origine"}, {label:"Valve", value:"360°"}, {label:"Visibilité", value:"Fluo"}],
+                pitch: "Les vraies couleurs constructeur. John Deere, CAT, Claas... Et le traceur de chantier 360° pour le BTP.",
+                techSpecs: [{label:"PAG", value:"Brillant Acrylique"}, {label:"IDEO TP", value:"Fluo 360°"}, {label:"Séchage", value:"Rapide"}],
+                techDescription: "Respect strict des codes couleurs machines (retouche invisible). Le traceur TP a une valve spéciale 'toutes positions'.",
+                colors: ["John Deere, CAT, Claas, New Holland... + Traceur Fluo TP"],
+                businessArgs: [
+                    {label:"1. Niche", value:"Agri", definition:"Attire une clientèle rurale et pro qui ne vient pas pour la déco."},
+                    {label:"2. Volume", value:"TP", definition:"Le traceur de chantier est un consommable pur. Vente par cartons de 12 aux entreprises."},
+                    {label:"3. Exclusivité", value:"Marque", definition:"Avoir la teinte exacte 'John Deere' ou 'CAT' crée une destination d'achat unique."},
+                    {label:"4. Marge", value:"Pro", definition:"Le professionnel ne négocie pas le prix d'un outil de travail."},
+                    {label:"5. Revente", value:"Occasion", definition:"Permet de remettre à neuf le matériel agricole avant revente (+ de valeur)."},
+                    {label:"6. Visibilité", value:"Chantier", definition:"Le Fluo TP est indispensable pour la sécurité et le marquage temporaire."},
+                    {label:"7. Usage", value:"360°", definition:"Valve tous sens pour le marquage au sol sans se baisser."},
+                    {label:"8. Cible", value:"BTP", definition:"Fait venir les maçons et TP dans le rayon peinture."},
+                    {label:"9. Réassort", value:"Auto", definition:"Consommation régulière sur la zone de chalandise rurale/périurbaine."},
+                    {label:"10. Gamme", value:"Large", definition:"Couvre les principales marques de tracteurs et engins."},
+                    {label:"11. Service", value:"Proximité", definition:"Évite au pro de commander sur internet avec des frais de port."}
+                ],
+                objections: [{objection:"Juste pour tracteurs ?", response:"Non, aussi pour TP (Pelles, Grues) et le marquage sol universel (IDEO)."}]
+            },
 
-        function createStars(score) {
-            let html = '<div class="flex text-yellow-400 gap-0.5">';
-            for (let i = 0; i < 5; i++) {
-                const fillClass = i < Math.floor(score) ? 'fill-current' : 'text-slate-200';
-                html += `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star ${fillClass}"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+            // GROUPE 4: MAINTENANCE
+            {
+                id: 501, univers: 4, fiche: 12, name: "85 GLADIO (Nettoyant Choc)", ref: "GL",
+                tags: ["Nettoyage", "Star", "Dégâts", "Opportunité"],
+                kpis: [{label:"Action", value:"Immédiate"}, {label:"Effort", value:"Zéro"}, {label:"Usage", value:"Murs"}],
+                pitch: "L'effaceur de moisissures. Pulvérisez, attendez, c'est propre. Sans frotter. Le produit miracle qui bluffe les clients.",
+                techSpecs: [{label:"Format", value:"500ml (Spray)"}, {label:"Action", value:"Fongicide"}, {label:"Surface", value:"Murs/Joints"}],
+                techDescription: "Formule active concentrée qui détruit la structure cellulaire des champignons. Action curative et préventive.",
+                colors: ["Incolore (Nettoyant)"],
+                businessArgs: [
+                    {label:"1. Produit Star", value:"Whaou", definition:"L'effet visuel immédiat crée un bouche-à-oreille puissant et des démos convaincantes."},
+                    {label:"2. Problème", value:"Solution", definition:"Résout un problème universel et pénible (la moisissure) sans aucun effort."},
+                    {label:"3. Vente Liée", value:"Peinture", definition:"Indispensable pour assainir un mur avant de peindre (sinon la moisissure revient)."},
+                    {label:"4. Rentabilité", value:"Forte", definition:"Produit chimique de spécialité à forte valeur ajoutée."},
+                    {label:"5. Rotation", value:"Rapide", definition:"S'utilise vite (500ml) et se rachète régulièrement en prévention."},
+                    {label:"6. Fidélisation", value:"Confiance", definition:"Quand ça marche aussi bien, le client revient pour tout le reste."},
+                    {label:"7. Usage", value:"Facile", definition:"Spray prêt à l'emploi, pas de dosage, pas de sceau."},
+                    {label:"8. Cible", value:"Tout Public", definition:"Concerne tous les foyers (salles de bain, caves, murs humides)."},
+                    {label:"9. Démonstration", value:"Vidéo", definition:"Idéal pour une vidéo de démo en rayon qui stoppe le client."},
+                    {label:"10. Efficacité", value:"Prouvée", definition:"Résultat visible en quelques minutes, satisfaction garantie."},
+                    {label:"11. Saisonnalité", value:"Automne", definition:"Pic de ventes à l'automne/hiver quand l'humidité rentre."}
+                ],
+                objections: [{objection:"Dangereux ?", response:"Puissant, nécessite aération."}]
+            },
+            {
+                id: 502, univers: 4, fiche: 13, name: "Sécurité Sols (Antidérapant)", ref: "AS",
+                tags: ["Sécurité", "Sol", "RSE", "Spécifique"],
+                kpis: [{label:"Sécurité", value:"Max"}, {label:"Aspect", value:"Invisible"}, {label:"Support", value:"Multi"}],
+                pitch: "Sécurisez vos sols en un spray. Vernis transparent invisible ou peinture pour éviter les chutes. Indispensable.",
+                techSpecs: [{label:"Base", value:"Acrylique"}, {label:"Grain", value:"Micro-billes"}, {label:"Usage", value:"Douche/Sol"}],
+                techDescription: "Contient des micro-particules invisibles qui créent un grip antidérapant (R10/R11) sans altérer l'esthétique du carrelage.",
+                colors: ["Vernis Transparent, Blanc, Jaune"],
+                businessArgs: [
+                    {label:"1. RSE", value:"Sécurité", definition:"Répond aux obligations de sécurité des entreprises (ERP) et lieux publics."},
+                    {label:"2. Innovation", value:"Invisible", definition:"Le vernis transparent pour bac à douche est une solution unique sur le marché."},
+                    {label:"3. Bricolage", value:"Maison", definition:"Idéal pour sécuriser un escalier extérieur, une terrasse bois, un bord de piscine."},
+                    {label:"4. Concurrence", value:"Nulle", definition:"Quasi-monopole sur ce type de solution pratique en aérosol."},
+                    {label:"5. Valeur", value:"Service", definition:"Vous ne vendez pas de la peinture, vous vendez de la tranquillité d'esprit (Enfants/Seniors)."},
+                    {label:"6. Cible", value:"Senior", definition:"Produit rassurant pour l'adaptation du logement (Silver Economy)."},
+                    {label:"7. Marge", value:"Forte", definition:"Produit technique à forte valeur."},
+                    {label:"8. Facilité", value:"Spray", definition:"Application beaucoup plus simple et rapide qu'une résine au rouleau."},
+                    {label:"9. Usage", value:"Extérieur", definition:"Résiste aux intempéries (bords de piscine, marches de jardin)."},
+                    {label:"10. Signalisation", value:"Jaune", definition:"La version Jaune sert au marquage de sécurité visuel (nez de marches)."},
+                    {label:"11. Cross-Merch", value:"Carrelage", definition:"À placer aussi au rayon Sol/Carrelage."}
+                ],
+                objections: [{objection:"Vraiment invisible ?", response:"Le vernis est transparent, il matifie légèrement la surface pour l'adhérence."}]
+            },
+            {
+                id: 503, univers: 4, fiche: 14, name: "Lubrifiants & Maintenance", ref: "LA",
+                tags: ["Lubrifiant", "Maintenance", "Tech", "Pro"],
+                kpis: [{label:"Gamme", value:"Complète"}, {label:"Tech", value:"PTFE/Dielect"}, {label:"Usage", value:"Atelier"}],
+                pitch: "L'arsenal du maintenancier. Dégrippant, Graisse Chaîne, Protection électrique. Tout pour l'atelier.",
+                techSpecs: [{label:"Relaxex", value:"Pénétrant"}, {label:"TX-2", value:"Diélectrique"}, {label:"Grasa", value:"PTFE"}],
+                techDescription: "Chimie fine : Le TX-2 isole jusqu'à 32.000 Volts. La graisse PTFE ne centrifuge pas. Le Relaxex utilise le choc thermique.",
+                colors: ["Dégrippant, Graisse Chaîne, Protection Elec, Anticorrosion"],
+                businessArgs: [
+                    {label:"1. Panier", value:"Caisse", definition:"Produits d'impulsion par excellence à placer en devant de caisse ou comptoir pro."},
+                    {label:"2. Technicité", value:"Haut Niveau", definition:"Le TX-2 et la Graisse Chaîne ciblent des besoins très spécifiques (élec, moto)."},
+                    {label:"3. Consommable", value:"Quotidien", definition:"Rotation rapide en milieu professionnel. Un atelier en consomme des litres."},
+                    {label:"4. Crédibilité", value:"Globale", definition:"Montre que FM Spray maîtrise toute la chimie, pas que la peinture."},
+                    {label:"5. Service", value:"Complet", definition:"Permet de fournir une solution globale de maintenance à l'atelier."},
+                    {label:"6. Cible", value:"Mecano", definition:"Indispensable pour l'entretien moto/vélo et la mécanique de précision."},
+                    {label:"7. Marge", value:"Volume", definition:"Produits à forte rotation et marge constante."},
+                    {label:"8. Qualité", value:"Pro", definition:"Formulations supérieures aux standards GSB classiques."},
+                    {label:"9. Complément", value:"Atelier", definition:"S'ajoute à tout achat d'outillage ou de quincaillerie."},
+                    {label:"10. Innovation", value:"Tech", definition:"Produits spécifiques (Diélectrique) rares en rayon grand public."},
+                    {label:"11. Fidélité", value:"Usage", definition:"Un bon dégrippant fidélise le client pour la vie."}
+                ],
+                objections: [{objection:"Concurrence WD40 ?", response:"Nos produits sont techniques et spécialisés (Dielectrique, Graisse Chaîne) là où WD40 est généraliste."}]
             }
-            html += '</div>';
-            return html;
-        }
+        ];
 
-        // SCROLL AUTOMATIQUE
-        function scrollToGrid() {
-            const grid = document.getElementById('productsGrid');
-            const offset = 220; // Ajusté pour le filtre double hauteur
-            const bodyRect = document.body.getBoundingClientRect().top;
-            const elementRect = grid.getBoundingClientRect().top;
-            const elementPosition = elementRect - bodyRect;
-            const offsetPosition = elementPosition - offset;
+        // --- MAPPING UNIVERS ---
+        const universMap = {
+            1: { label: "Décoration & Maison", icon: "brush", color: "text-purple-600 bg-purple-50" },
+            2: { label: "Métal & Technique", icon: "wrench", color: "text-blue-600 bg-blue-50" },
+            3: { label: "Auto & Agricole", icon: "car", color: "text-green-600 bg-green-50" },
+            4: { label: "Maintenance", icon: "shield-check", color: "text-orange-600 bg-orange-50" }
+        };
 
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-            });
-        }
+        // --- APP STATE & UTILS ---
+        let currentView = 'discovery'; 
+        let activeUnivers = 0;
+        let searchTerm = "";
+        let quoteItems = [];
 
-        function renderUniversButtons() {
-            const container = document.getElementById('universFilters');
-            container.innerHTML = '';
+        function switchView(viewName) {
+            currentView = viewName;
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${viewName}`).classList.add('active');
             
-            Object.entries(universMap).forEach(([key, u]) => {
-                const id = parseInt(key);
-                const isActive = activeUnivers === id;
-                const button = document.createElement('button');
-                
-                button.className = `flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all shadow-sm whitespace-nowrap
-                    ${isActive 
-                        ? 'bg-blue-600 text-white shadow-blue-300 ring-2 ring-blue-400 ring-offset-1' 
-                        : 'bg-white text-slate-600 hover:bg-slate-50 hover:text-blue-600 border border-slate-200'}`;
-                
-                button.innerHTML = `<i data-lucide="${u.icon}" class="w-3 h-3"></i> ${u.label}`;
-                button.onclick = () => {
-                    activeUnivers = id;
-                    activeTag = null; // Reset tag selection when changing universe
-                    searchTerm = ""; 
-                    document.getElementById('searchInput').value = "";
-                    renderAllFilters(); // Re-render both filter bars
-                    renderProducts();
-                    scrollToGrid();
-                };
-                container.appendChild(button);
-            });
+            document.getElementById('view-discovery').classList.add('hidden');
+            document.getElementById('view-catalog').classList.add('hidden');
+            document.getElementById('view-quote').classList.add('hidden');
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+
+            const searchContainer = document.getElementById('search-container');
+            if(viewName === 'discovery') {
+                searchContainer.classList.add('invisible');
+                document.getElementById('page-title').innerText = "Guide d'Entretien";
+                document.getElementById('page-subtitle').innerText = "Questions & Stratégie";
+                renderDiscovery();
+            } else if (viewName === 'quote') {
+                searchContainer.classList.add('invisible');
+                document.getElementById('page-title').innerText = "Générateur de Devis";
+                document.getElementById('page-subtitle').innerText = "Simulation rapide pour l'acheteur";
+                renderQuoteForm();
+            } else {
+                searchContainer.classList.remove('invisible');
+                document.getElementById('page-title').innerText = "Catalogue Produits";
+                document.getElementById('page-subtitle').innerText = "Fiches détaillées (10+ Arguments)";
+                renderFilters();
+                renderProducts();
+            }
         }
 
-        function renderTagButtons() {
-            const container = document.getElementById('tagFilters');
-            container.innerHTML = '';
+        // --- VIEW: DISCOVERY (STATIC) ---
+        function renderDiscovery() {
+            const container = document.getElementById('discovery-content');
+            container.innerHTML = "";
 
-            Object.entries(tagMap).forEach(([tag, colorClass]) => {
-                const isActive = activeTag === tag;
-                const button = document.createElement('button');
-                
-                // Style dynamique : si actif, on force un style "sélectionné", sinon style par défaut du tag
-                const baseStyle = isActive 
-                    ? "bg-slate-800 text-white ring-2 ring-slate-400 ring-offset-1" 
-                    : "bg-white text-slate-500 border border-slate-200 hover:bg-slate-50";
-
-                button.className = `px-3 py-1.5 rounded-md text-[10px] uppercase font-bold tracking-wide transition-all ${baseStyle}`;
-                button.innerText = tag;
-                
-                button.onclick = () => {
-                    // Toggle logic
-                    if (activeTag === tag) {
-                        activeTag = null; // Désactiver si déjà actif
-                    } else {
-                        activeTag = tag;
-                        activeUnivers = 0; // Désactiver l'univers pour chercher dans TOUT le catalogue
-                    }
-                    renderAllFilters();
-                    renderProducts();
-                    scrollToGrid();
-                };
-                container.appendChild(button);
+            discoveryQuestions.forEach((phase, i) => {
+                const html = `
+                    <div class="mb-12 animate-fade-in" style="animation-delay: ${i * 100}ms">
+                        <div class="flex items-center gap-4 mb-6 pb-3 border-b-2 ${phase.color.replace('bg-', 'border-').split(' ')[0]}">
+                            <div class="p-3 rounded-lg shadow-sm bg-white border border-slate-100 text-slate-700">
+                                <i data-lucide="${phase.icon}" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-black text-slate-800 uppercase tracking-widest">${phase.phase}</h3>
+                                <p class="text-sm text-slate-500 font-medium">${phase.subtitle}</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            ${phase.questions.map((q) => `
+                                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:border-slate-300 transition-all">
+                                    <p class="text-base font-bold text-slate-800 mb-3 flex gap-3 leading-snug">
+                                        <span class="text-red-500 font-black">Q.</span>
+                                        ${q}
+                                    </p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
             });
-        }
-
-        function renderAllFilters() {
-            renderUniversButtons();
-            renderTagButtons();
             lucide.createIcons();
+        }
+
+        // --- VIEW: CATALOG ---
+        function renderFilters() {
+            const container = document.getElementById('universFilters');
+            container.innerHTML = `<button onclick="setUnivers(0)" class="px-5 py-2.5 rounded-full text-sm font-bold border transition-all ${activeUnivers === 0 ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:bg-slate-50'}">Tout Voir</button>`;
+            
+            Object.entries(universMap).forEach(([id, u]) => {
+                const isActive = activeUnivers == id;
+                const btnClass = isActive 
+                    ? `bg-white ring-2 ring-inset ring-slate-900 text-slate-900 shadow-md` 
+                    : `bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-800`;
+                
+                container.innerHTML += `
+                    <button onclick="setUnivers(${id})" class="px-5 py-2.5 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${btnClass}">
+                        <i data-lucide="${u.icon}" class="w-4 h-4"></i> ${u.label}
+                    </button>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function setUnivers(id) {
+            activeUnivers = id;
+            document.getElementById('searchInput').value = "";
+            searchTerm = "";
+            renderFilters();
+            renderProducts();
         }
 
         function renderProducts() {
             const container = document.getElementById('productsGrid');
-            const emptyState = document.getElementById('emptyState');
-            container.innerHTML = '';
-
-            const filtered = productsData.filter(item => {
-                // Filtre Univers (si pas 0)
-                const matchesUnivers = activeUnivers === 0 || item.univers === activeUnivers;
-                
-                // Filtre Tag (si actif)
-                const matchesTag = activeTag ? item.tags.includes(activeTag) : true;
-
-                // Filtre Recherche Texte
-                const searchLower = searchTerm.toLowerCase();
-                const matchesSearch = item.name.toLowerCase().includes(searchLower) || 
-                                      item.brand.toLowerCase().includes(searchLower) ||
-                                      item.pitch.toLowerCase().includes(searchLower) ||
-                                      item.businessArgs.some(arg => arg.label.toLowerCase().includes(searchLower));
-                
-                return matchesUnivers && matchesTag && matchesSearch;
+            const empty = document.getElementById('emptyState');
+            container.innerHTML = "";
+            
+            const filtered = productsData.filter(p => {
+                const matchUnivers = activeUnivers === 0 || p.univers === activeUnivers;
+                const search = searchTerm.toLowerCase();
+                const matchSearch = !search || 
+                    p.name.toLowerCase().includes(search) || 
+                    p.ref.toLowerCase().includes(search) || 
+                    p.tags.some(t => t.toLowerCase().includes(search));
+                return matchUnivers && matchSearch;
             });
 
-            if (filtered.length === 0) {
-                emptyState.classList.remove('hidden');
-                emptyState.classList.add('flex');
-            } else {
-                emptyState.classList.add('hidden');
-                emptyState.classList.remove('flex');
-
-                filtered.forEach(product => {
-                    const card = document.createElement('div');
-                    card.className = "bg-white rounded-2xl shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-300 flex flex-col h-full overflow-hidden";
-                    
-                    const headerClass = product.isMDD ? 'bg-orange-50 border-b border-orange-100' : 'bg-blue-50 border-b border-blue-100';
-                    const badgeClass = product.isMDD ? 'bg-orange-200 text-orange-800' : 'bg-blue-200 text-blue-800';
-
-                    // Tags display in card
-                    const tagsHtml = product.tags.map(t => `<span class="px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${tagMap[t] || 'bg-gray-100 text-gray-600'}">${t}</span>`).join('');
-
-                    // SECTION BUSINESS (PAR DÉFAUT MAINTENANT CAR DEMANDÉ "PARTIE PRINCIPALE")
-                    const businessContent = `
-                        <div id="content-business-${product.id}" class="tab-content fade-in">
-                            <div class="mb-4 bg-yellow-50 p-3 rounded-lg border border-yellow-100">
-                                <h4 class="text-xs font-bold text-yellow-800 uppercase mb-2 flex items-center gap-2">
-                                    <i data-lucide="trending-up" class="w-4 h-4"></i> Arguments Clés
-                                </h4>
-                                <div class="space-y-3">
-                                  ${product.businessArgs.map(a => `
-                                    <div class="flex flex-col border-b border-yellow-200/50 pb-2 last:border-0 last:pb-0">
-                                       <div class="flex justify-between items-center">
-                                         <span class="text-[11px] text-slate-500 font-bold uppercase">${a.label}</span>
-                                         <span class="text-xs font-bold text-slate-800 bg-white px-1.5 rounded">${a.value}</span>
-                                       </div>
-                                       <div class="text-xs text-slate-600 italic mt-0.5 leading-snug">"${a.definition}"</div>
-                                    </div>
-                                  `).join('')}
-                                </div>
-                            </div>
-                        </div>`;
-
-                    const mainContent = `
-                        <div id="content-main-${product.id}" class="tab-content fade-in hidden">
-                            <div class="bg-blue-50 p-4 rounded-xl border-l-4 border-blue-500 shadow-sm mb-4">
-                                <h4 class="text-xs font-bold text-blue-700 uppercase mb-1 flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> Argument Choc</h4>
-                                <p class="text-slate-800 italic font-semibold leading-relaxed">"${product.pitch}"</p>
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Points Forts</h4>
-                                <ul class="space-y-2">${product.highlights.map((p, i) => `<li class="flex gap-2 items-start text-slate-600 text-xs"><span class="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-[10px] font-bold">${i+1}</span><span>${p}</span></li>`).join('')}</ul>
-                            </div>
-                        </div>`;
-
-                    const techContent = `
-                        <div id="content-tech-${product.id}" class="tab-content fade-in hidden">
-                             <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 h-full">
-                                <h4 class="text-xs font-bold text-slate-500 uppercase mb-3 flex items-center gap-1"><i data-lucide="settings" class="w-3 h-3"></i> Données Techniques</h4>
-                                <div class="grid grid-cols-2 gap-y-4 gap-x-2 text-xs">
-                                   ${product.techSpecs.map(s => `<div class="flex flex-col"><span class="text-slate-400 text-[10px] uppercase font-bold">${s.label}</span><span class="font-semibold text-slate-700 mt-0.5">${s.value}</span></div>`).join('')}
-                                </div>
-                                <div class="mt-4 pt-4 border-t border-slate-200">
-                                    <div class="text-xs font-bold text-red-500 mb-1 flex items-center gap-1"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Objection & Réponse</div>
-                                    <div class="text-xs text-slate-600 italic">"${product.objections[0].response}"</div>
-                                </div>
-                             </div>
-                        </div>`;
-
-                    card.innerHTML = `
-                        <div class="p-5 ${headerClass}">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${badgeClass}">${product.brand}</span>
-                                <div class="flex gap-1">${tagsHtml}</div>
-                            </div>
-                            <h3 class="text-lg font-black text-slate-800 leading-tight mb-1">${product.name}</h3>
-                            <p class="text-xs text-slate-500 font-medium mb-3">${product.target}</p>
-                            <div class="flex items-center gap-2">${createStars(product.reviews.score)}<span class="text-xs font-bold text-slate-600">${product.reviews.score}/5</span></div>
-                        </div>
-                        
-                        <!-- KPIs -->
-                        <div class="grid grid-cols-3 divide-x divide-slate-100 border-b border-slate-100 bg-slate-50/50 py-3">
-                            ${product.kpis.map(k => `
-                            <div class="text-center px-1">
-                                <div class="text-[10px] text-slate-400 uppercase font-bold mb-0.5">${k.label}</div>
-                                <div class="text-sm font-black text-blue-600">${k.value}</div>
-                            </div>
-                            `).join('')}
-                        </div>
-
-                        <!-- TABS -->
-                        <div class="flex border-b border-slate-200 bg-white">
-                            <button class="tab-btn flex-1 py-3 text-[11px] font-bold uppercase tracking-wide transition-colors text-slate-400 hover:text-slate-600 tab-active" data-target="business" data-id="${product.id}">
-                                Business
-                            </button>
-                            <button class="tab-btn flex-1 py-3 text-[11px] font-bold uppercase tracking-wide transition-colors text-slate-400 hover:text-slate-600" data-target="main" data-id="${product.id}">
-                                Pitch
-                            </button>
-                            <button class="tab-btn flex-1 py-3 text-[11px] font-bold uppercase tracking-wide transition-colors text-slate-400 hover:text-slate-600" data-target="tech" data-id="${product.id}">
-                                Tech
-                            </button>
-                        </div>
-
-                        <!-- CONTENT -->
-                        <div class="p-5 flex-grow bg-white text-sm h-[320px] overflow-y-auto custom-scrollbar">
-                            ${businessContent}${mainContent}${techContent}
-                        </div>
-                        
-                        <div class="bg-slate-50 border-t border-slate-100 px-4 py-2 text-[10px] text-slate-400 text-center font-mono uppercase">REF: ${product.ref}</div>
-                    `;
-                    container.appendChild(card);
-                });
+            if(filtered.length === 0) {
+                container.classList.add('hidden');
+                empty.classList.remove('hidden');
+                empty.classList.add('flex');
+                return;
             }
+
+            container.classList.remove('hidden');
+            empty.classList.add('hidden');
+            empty.classList.remove('flex');
+
+            filtered.forEach(p => {
+                const uColor = universMap[p.univers].color.split(" ")[0]; 
+                
+                let tagsHtml = p.tags.map(t => `<span class="text-[9px] uppercase font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500 border border-slate-200 tracking-wider">${t}</span>`).join('');
+                
+                let kpisHtml = p.kpis.map(k => `
+                    <div class="text-center flex-1 border-r border-slate-100 last:border-0 px-2">
+                        <span class="block text-sm font-black text-slate-800">${k.value}</span>
+                        <span class="text-[9px] uppercase font-bold text-slate-400 truncate w-full block">${k.label}</span>
+                    </div>
+                `).join('');
+
+                let colorsHtml = p.colors.map(c => {
+                    let dotColor = "#e2e8f0";
+                    const lowerC = c.toLowerCase();
+                    if(lowerC.includes('rojo') || lowerC.includes('rouge')) dotColor = "#ef4444";
+                    else if(lowerC.includes('amarillo') || lowerC.includes('jaune') || lowerC.includes('oro') || lowerC.includes('or')) dotColor = "#eab308";
+                    else if(lowerC.includes('azul') || lowerC.includes('bleu')) dotColor = "#3b82f6";
+                    else if(lowerC.includes('verde') || lowerC.includes('vert')) dotColor = "#22c55e";
+                    else if(lowerC.includes('negro') || lowerC.includes('noir')) dotColor = "#1e293b";
+                    else if(lowerC.includes('blanco') || lowerC.includes('blanc')) dotColor = "#ffffff";
+                    else if(lowerC.includes('naranja') || lowerC.includes('orange')) dotColor = "#f97316";
+                    
+                    const formattedC = c.replace(/\*\*(.*?)\*\*/g, '<span class="font-bold text-slate-900">$1</span>');
+                    return `<li class="text-[11px] text-slate-600 flex items-start py-1 border-b border-slate-50 last:border-0"><span class="color-dot mt-0.5" style="background:${dotColor}"></span><span>${formattedC}</span></li>`;
+                }).join('');
+
+                let bizHtml = p.businessArgs.map((a, idx) => `
+                    <div class="mb-3 last:mb-0 border-b border-slate-50 pb-2 last:border-0 last:pb-0">
+                        <div class="flex justify-between items-center mb-0.5">
+                            <div class="flex items-center">
+                                <span class="arg-bullet">${idx + 1}</span>
+                                <span class="text-[10px] font-bold uppercase text-slate-500">${a.label}</span>
+                            </div>
+                            <span class="text-[11px] font-bold ${uColor} bg-slate-50 px-2 py-0.5 rounded">${a.value}</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600 italic pl-8 leading-snug">"${a.definition}"</p>
+                    </div>
+                `).join('');
+
+                let techHtml = p.techSpecs.map(t => `
+                    <div class="flex justify-between border-b border-slate-100 py-1.5 last:border-0">
+                        <span class="text-xs text-slate-500 font-medium">${t.label}</span>
+                        <span class="text-xs font-bold text-slate-800">${t.value}</span>
+                    </div>
+                `).join('');
+
+                let objectionHtml = '';
+                if(p.objections && p.objections.length > 0) {
+                    objectionHtml = `
+                        <div class="mt-4 pt-3 border-t border-slate-100 bg-red-50 p-2 rounded">
+                            <span class="text-[10px] font-bold text-red-600 uppercase flex items-center gap-1"><i data-lucide="shield-alert" class="w-3 h-3"></i> Objection :</span>
+                            <p class="text-[11px] text-slate-700 font-medium">"${p.objections[0].objection}"</p>
+                            <p class="text-[11px] text-slate-500 mt-1 italic">→ ${p.objections[0].response}</p>
+                        </div>
+                    `;
+                }
+
+                const cardHTML = `
+                    <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 relative group">
+                        <div class="p-4 border-b border-slate-100 bg-gradient-to-b from-white to-slate-50/50">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="bg-slate-900 text-white text-[10px] font-condensed font-bold px-2 py-0.5 rounded shadow-sm">FICHE ${p.fiche}</span>
+                                <span class="text-[10px] font-mono text-slate-400 font-bold">${p.ref}</span>
+                            </div>
+                            <h3 class="text-lg font-condensed font-bold text-slate-900 leading-tight mb-2 group-hover:text-red-600 transition-colors">${p.name}</h3>
+                            <div class="flex gap-1 mb-3 flex-wrap">${tagsHtml}</div>
+                            <div class="flex items-center justify-between bg-white rounded-lg border border-slate-200 shadow-sm py-2">
+                                ${kpisHtml}
+                            </div>
+                        </div>
+
+                        <div class="flex border-b border-slate-200 bg-white sticky top-0 z-10">
+                            <button onclick="switchTab(this, 'biz', ${p.id})" class="tab-btn active flex-1 py-2.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 hover:bg-slate-50 transition-colors">Business</button>
+                            <button onclick="switchTab(this, 'colors', ${p.id})" class="tab-btn flex-1 py-2.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 hover:bg-slate-50 transition-colors">Nuancier</button>
+                            <button onclick="switchTab(this, 'tech', ${p.id})" class="tab-btn flex-1 py-2.5 text-[10px] font-bold uppercase tracking-wide text-slate-400 hover:bg-slate-50 transition-colors">Tech</button>
+                        </div>
+
+                        <div class="p-4 bg-white h-80 overflow-y-auto custom-scrollbar relative content-area">
+                            <div id="tab-biz-${p.id}" class="tab-content fade-in">
+                                <div class="bg-blue-50 border-l-4 border-blue-500 p-3 rounded mb-4 shadow-sm">
+                                    <h4 class="text-[10px] font-bold uppercase text-blue-700 mb-1 flex items-center gap-1"><i data-lucide="zap" class="w-3 h-3"></i> Argument Choc</h4>
+                                    <p class="text-xs font-semibold text-slate-800 leading-relaxed">"${p.pitch}"</p>
+                                </div>
+                                <div class="space-y-1">${bizHtml}</div>
+                                ${objectionHtml}
+                            </div>
+
+                            <div id="tab-colors-${p.id}" class="tab-content hidden fade-in">
+                                <div class="flex justify-between items-center mb-3 sticky top-0 bg-white pb-2 border-b border-slate-100">
+                                    <h4 class="text-[10px] font-bold uppercase text-slate-400">Références (${p.colors.length})</h4>
+                                </div>
+                                <ul class="grid grid-cols-1 gap-0">${colorsHtml}</ul>
+                            </div>
+
+                            <div id="tab-tech-${p.id}" class="tab-content hidden fade-in">
+                                <div class="mb-4">
+                                    <h4 class="text-[10px] font-bold uppercase text-slate-400 mb-2 border-b border-slate-100 pb-1">Données</h4>
+                                    ${techHtml}
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded border border-slate-200">
+                                    <h4 class="text-[10px] font-bold uppercase text-slate-500 mb-1 flex items-center gap-1"><i data-lucide="microscope" class="w-3 h-3"></i> Comment ça marche ?</h4>
+                                    <p class="text-[11px] text-slate-600 leading-relaxed text-justify">${p.techDescription}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = cardHTML;
+                container.appendChild(tempDiv.firstElementChild);
+            });
             lucide.createIcons();
         }
 
-        function resetSearch() {
-            searchTerm = "";
-            activeTag = null;
-            document.getElementById('searchInput').value = "";
-            activeUnivers = 1; // Retour univers 1
-            renderAllFilters();
-            renderProducts();
-        }
-
-        // --- EVENT DELEGATION (NAVIGATION ONGLETS) ---
-        document.getElementById('productsGrid').addEventListener('click', function(e) {
-            const btn = e.target.closest('.tab-btn');
-            if (!btn) return;
-            e.preventDefault();
-            
-            const target = btn.dataset.target;
-            const productId = btn.dataset.id;
-            const card = btn.closest('.bg-white');
-
-            // Update Buttons
-            const cardBtns = card.querySelectorAll('.tab-btn');
-            cardBtns.forEach(b => {
-                if (b === btn) b.classList.add('tab-active', 'text-blue-800');
-                else b.classList.remove('tab-active', 'text-blue-800');
+        function switchTab(btn, tabName, id) {
+            const card = btn.closest('.relative');
+            card.querySelectorAll('button').forEach(b => {
+                b.classList.remove('active', 'text-red-600');
+                b.classList.add('text-slate-400');
             });
+            btn.classList.add('active', 'text-red-600');
+            btn.classList.remove('text-slate-400');
 
-            // Update Content
-            const contents = card.querySelectorAll('.tab-content');
-            contents.forEach(c => c.classList.add('hidden'));
-            document.getElementById(`content-${target}-${productId}`).classList.remove('hidden');
-        });
+            const contentArea = card.querySelector('.content-area');
+            contentArea.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            contentArea.querySelector(`#tab-${tabName}-${id}`).classList.remove('hidden');
+        }
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
             searchTerm = e.target.value;
-            if(searchTerm.length > 0) {
-                activeUnivers = 0;
-                activeTag = null;
-            } else {
-                activeUnivers = 1;
-            }
-            renderAllFilters();
             renderProducts();
         });
 
+        // --- VIEW: QUOTE ---
+        function renderQuoteForm() {
+            // Populate select
+            const select = document.getElementById('quote-product-select');
+            if(select.options.length <= 1) {
+                productsData.forEach(p => {
+                    const option = document.createElement('option');
+                    option.value = p.id;
+                    option.text = `${p.ref} - ${p.name}`;
+                    select.appendChild(option);
+                });
+            }
+        }
+
+        function addToQuote() {
+            const id = document.getElementById('quote-product-select').value;
+            const qty = parseInt(document.getElementById('quote-qty').value) || 1;
+            const price = parseFloat(document.getElementById('quote-price').value) || 0;
+            const discount = parseFloat(document.getElementById('quote-discount').value) || 0;
+
+            if (!id) return alert("Sélectionnez un produit");
+
+            const product = productsData.find(p => p.id == id);
+            const totalHT = qty * price * (1 - discount/100);
+
+            quoteItems.push({
+                product: product,
+                qty: qty,
+                price: price,
+                discount: discount,
+                totalHT: totalHT
+            });
+
+            renderQuoteTable();
+        }
+
+        function renderQuoteTable() {
+            const tbody = document.getElementById('quote-table-body');
+            tbody.innerHTML = "";
+
+            let totalGross = 0;
+            let totalNet = 0;
+
+            quoteItems.forEach((item, index) => {
+                totalGross += item.qty * item.price;
+                totalNet += item.totalHT;
+
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-50">
+                        <td class="px-6 py-4 font-medium text-slate-900">${item.product.name} <span class="text-slate-400 text-xs block">${item.product.ref}</span></td>
+                        <td class="px-6 py-4 text-center">${item.qty}</td>
+                        <td class="px-6 py-4 text-right">${item.price.toFixed(2)} €</td>
+                        <td class="px-6 py-4 text-right text-red-500">-${item.discount}%</td>
+                        <td class="px-6 py-4 text-right font-bold">${item.totalHT.toFixed(2)} €</td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="removeQuoteItem(${index})" class="text-slate-400 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            if(quoteItems.length === 0) {
+                tbody.innerHTML = `<tr id="empty-row"><td colspan="6" class="px-6 py-12 text-center text-slate-400 italic">Aucun produit ajouté</td></tr>`;
+            }
+
+            document.getElementById('total-gross').innerText = totalGross.toFixed(2) + " €";
+            document.getElementById('total-discount').innerText = "-" + (totalGross - totalNet).toFixed(2) + " €";
+            document.getElementById('total-net').innerText = totalNet.toFixed(2) + " €";
+            
+            lucide.createIcons();
+        }
+
+        function removeQuoteItem(index) {
+            quoteItems.splice(index, 1);
+            renderQuoteTable();
+        }
+
+        function printQuote() {
+            window.print();
+        }
+
         // INIT
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAllFilters();
-            renderProducts();
-        });
+        switchView('discovery');
+        renderFilters();
+        renderProducts();
 
     </script>
 </body>
