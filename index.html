@@ -76,6 +76,9 @@
         .objection-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .response-box { border-left: 4px solid #2563eb; }
         .theme-filter-btn.active { background-color: #1e293b; color: white; border-color: #1e293b; }
+
+        /* Styles Calculatrice */
+        .calc-input:focus { outline: none; border-color: #dc2626; ring: 2px solid #fecaca; }
     </style>
 </head>
 <body class="text-slate-900 h-screen flex overflow-hidden">
@@ -105,7 +108,6 @@
                     </div>
                 </button>
 
-                <!-- NEW BUTTON OBJECTIONS -->
                 <button onclick="switchView('objections')" id="nav-objections" class="nav-item w-full flex items-center gap-4 px-4 py-4 text-sm font-bold text-slate-300 rounded-r-lg hover:bg-slate-800 hover:text-white text-left group transition-all">
                     <div class="bg-slate-800 p-2.5 rounded-lg group-hover:bg-red-600 transition-colors">
                         <i data-lucide="message-square-warning" class="w-5 h-5"></i>
@@ -155,13 +157,24 @@
                         <span class="text-[10px] font-normal text-slate-500 block group-hover:text-slate-300">Histoire & Valeurs</span>
                     </div>
                 </button>
+
+                <!-- NEW BUTTON CALCULATOR -->
+                <button onclick="switchView('calculator')" id="nav-calculator" class="nav-item w-full flex items-center gap-4 px-4 py-4 text-sm font-bold text-slate-300 rounded-r-lg hover:bg-slate-800 hover:text-white text-left group transition-all">
+                    <div class="bg-slate-800 p-2.5 rounded-lg group-hover:bg-red-600 transition-colors">
+                        <i data-lucide="percent" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="block text-base">Calcul de Marge</span>
+                        <span class="text-[10px] font-normal text-slate-500 block group-hover:text-slate-300">Outil Rentabilité</span>
+                    </div>
+                </button>
             </nav>
         </div>
 
         <div class="mt-auto p-6 bg-slate-950 border-t border-slate-800">
             <div class="flex items-center gap-3">
                 <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                <p class="text-xs text-slate-400 font-medium">Base v6.3 - Prêt</p>
+                <p class="text-xs text-slate-400 font-medium">Base v6.4 - Prêt</p>
             </div>
         </div>
     </aside>
@@ -207,7 +220,7 @@
                 </div>
             </div>
 
-            <!-- VIEW 2: OBJECTIONS (NOUVELLE PAGE) -->
+            <!-- VIEW 2: OBJECTIONS -->
             <div id="view-objections" class="hidden fade-in h-full flex flex-col">
                 <!-- Filters & Search Toolbar (Sticky) -->
                 <div class="bg-white border-b border-slate-200 p-6 sticky top-0 z-10 shadow-sm">
@@ -466,6 +479,81 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- VIEW 7: CALCULATOR (NEW) -->
+            <div id="view-calculator" class="hidden fade-in pb-20 p-8">
+                <div class="max-w-lg mx-auto">
+                    
+                    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                        <!-- Header -->
+                        <div class="bg-slate-900 p-6 text-white text-center relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+                            <h2 class="text-2xl font-condensed font-black uppercase tracking-wider relative z-10">Calculateur de Marge</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest relative z-10">Outil Négociation Immédiate</p>
+                        </div>
+
+                        <div class="p-8 space-y-8">
+                            
+                            <!-- Inputs Section -->
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">1. Votre Prix d'Achat (Unitaire HT)</label>
+                                    <div class="relative">
+                                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">€</span>
+                                        <input type="number" id="calc-pa" placeholder="0.00" step="0.01" class="calc-input w-full pl-10 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-xl text-xl font-bold text-slate-900 placeholder-slate-300 transition-all text-center">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">2. Marge Souhaitée (%)</label>
+                                    <div class="relative">
+                                        <input type="number" id="calc-margin" placeholder="30" step="1" class="calc-input w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-xl text-xl font-bold text-red-600 placeholder-red-200 transition-all text-center">
+                                        <span class="absolute right-8 top-1/2 -translate-y-1/2 text-red-300 font-bold">%</span>
+                                    </div>
+                                    <div class="flex justify-center gap-2 mt-2">
+                                        <button onclick="setMargin(20)" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold px-3 py-1 rounded-full transition-colors">20%</button>
+                                        <button onclick="setMargin(30)" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold px-3 py-1 rounded-full transition-colors">30%</button>
+                                        <button onclick="setMargin(40)" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold px-3 py-1 rounded-full transition-colors">40%</button>
+                                        <button onclick="setMargin(50)" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold px-3 py-1 rounded-full transition-colors">50%</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Divider -->
+                            <div class="relative h-px bg-slate-200">
+                                <div class="absolute left-1/2 -translate-x-1/2 -top-3 bg-white px-2">
+                                    <div class="bg-slate-100 p-1 rounded-full text-slate-400"><i data-lucide="arrow-down" class="w-4 h-4"></i></div>
+                                </div>
+                            </div>
+
+                            <!-- Results Section -->
+                            <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 space-y-4">
+                                <div class="text-center">
+                                    <p class="text-xs font-bold text-slate-500 uppercase mb-1">Prix de Vente Conseillé (HT)</p>
+                                    <div id="res-pv" class="text-4xl font-black text-slate-900 tracking-tight">0.00 €</div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200">
+                                    <div class="text-center">
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Marge Valeur</p>
+                                        <div id="res-val" class="text-lg font-bold text-green-600">+0.00 €</div>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Coefficient</p>
+                                        <div id="res-coef" class="text-lg font-bold text-blue-600">x 0.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <p class="text-[10px] text-center text-slate-400 italic">
+                                *Calcul basé sur la marge commerciale (Taux de Marque) :<br> PV = PA / (1 - TauxMarge).
+                            </p>
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -1102,6 +1190,7 @@
             document.getElementById('view-quote').classList.add('hidden');
             document.getElementById('view-history').classList.add('hidden');
             document.getElementById('view-objections').classList.add('hidden');
+            document.getElementById('view-calculator').classList.add('hidden'); // NEW
             
             document.getElementById(`view-${viewName}`).classList.remove('hidden');
 
@@ -1130,6 +1219,10 @@
                 document.getElementById('page-title').innerText = "Traitement des Objections";
                 document.getElementById('page-subtitle').innerText = "Base de données : 30 scénarios";
                 renderObjectionsList();
+            } else if (viewName === 'calculator') { // NEW
+                searchContainer.classList.add('invisible');
+                document.getElementById('page-title').innerText = "Calculateur de Rentabilité";
+                document.getElementById('page-subtitle').innerText = "Outil de négociation commerciale";
             } else {
                 searchContainer.classList.remove('invisible');
                 document.getElementById('page-title').innerText = "Catalogue Produits";
@@ -1170,15 +1263,12 @@
 
             if (answerDiv.classList.contains('hidden')) {
                 answerDiv.classList.remove('hidden');
-                // Lucide icons are SVGs replaced by JS, so we toggle classes on parent or re-render icon, 
-                // but since Lucide replaces the <i> tag, we check the inner content or class.
-                // Simple toggle logic for Lucide:
-                icon.innerHTML = ''; // Clear SVG
+                icon.innerHTML = ''; 
                 icon.setAttribute('data-lucide', 'minus');
                 card.classList.add('ring-2', 'ring-blue-500');
             } else {
                 answerDiv.classList.add('hidden');
-                icon.innerHTML = ''; // Clear SVG
+                icon.innerHTML = ''; 
                 icon.setAttribute('data-lucide', 'plus');
                 card.classList.remove('ring-2', 'ring-blue-500');
             }
@@ -1261,6 +1351,55 @@
             objectionSearchQuery = e.target.value;
             renderObjectionsList();
         });
+
+        // --- CALCULATOR LOGIC (NEW) ---
+        const calcPA = document.getElementById('calc-pa');
+        const calcMargin = document.getElementById('calc-margin');
+        const resPV = document.getElementById('res-pv');
+        const resVal = document.getElementById('res-val');
+        const resCoef = document.getElementById('res-coef');
+
+        function updateCalculation() {
+            const pa = parseFloat(calcPA.value);
+            const margin = parseFloat(calcMargin.value);
+
+            if (!pa || pa <= 0) {
+                resPV.innerText = "0.00 €";
+                resVal.innerText = "+0.00 €";
+                resCoef.innerText = "x 0.00";
+                return;
+            }
+
+            if (!margin || margin <= 0) {
+                // Si pas de marge, PV = PA
+                resPV.innerText = pa.toFixed(2) + " €";
+                resVal.innerText = "0.00 €";
+                resCoef.innerText = "x 1.00";
+                return;
+            }
+
+            if (margin >= 100) {
+                resPV.innerText = "Erreur";
+                return;
+            }
+
+            // Formule Marge Commerciale : PV = PA / (1 - TauxMarge)
+            const pv = pa / (1 - (margin / 100));
+            const val = pv - pa;
+            const coef = pv / pa;
+
+            resPV.innerText = pv.toFixed(2) + " €";
+            resVal.innerText = "+" + val.toFixed(2) + " €";
+            resCoef.innerText = "x " + coef.toFixed(2);
+        }
+
+        function setMargin(val) {
+            calcMargin.value = val;
+            updateCalculation();
+        }
+
+        calcPA.addEventListener('input', updateCalculation);
+        calcMargin.addEventListener('input', updateCalculation);
 
 
         // --- VIEW: DISCOVERY (STATIC) ---
