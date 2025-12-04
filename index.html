@@ -533,6 +533,11 @@
                                 <div class="text-center">
                                     <p class="text-xs font-bold text-slate-500 uppercase mb-1">Prix de Vente Conseillé (HT)</p>
                                     <div id="res-pv" class="text-4xl font-black text-slate-900 tracking-tight">0.00 €</div>
+                                    <!-- NOUVEAU : PRIX TTC -->
+                                    <div class="mt-2 flex items-center justify-center gap-2">
+                                        <span class="text-xs font-bold text-slate-400 uppercase">TTC (20%) :</span>
+                                        <span id="res-pv-ttc" class="text-sm font-bold text-slate-600">0.00 €</span>
+                                    </div>
                                 </div>
                                 
                                 <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-200">
@@ -1358,6 +1363,7 @@
         const resPV = document.getElementById('res-pv');
         const resVal = document.getElementById('res-val');
         const resCoef = document.getElementById('res-coef');
+        const resPvTtc = document.getElementById('res-pv-ttc'); // Get element for TTC
 
         function updateCalculation() {
             const pa = parseFloat(calcPA.value);
@@ -1365,6 +1371,7 @@
 
             if (!pa || pa <= 0) {
                 resPV.innerText = "0.00 €";
+                resPvTtc.innerText = "0.00 €"; // Reset TTC
                 resVal.innerText = "+0.00 €";
                 resCoef.innerText = "x 0.00";
                 return;
@@ -1372,7 +1379,11 @@
 
             if (!margin || margin <= 0) {
                 // Si pas de marge, PV = PA
-                resPV.innerText = pa.toFixed(2) + " €";
+                const pv = pa;
+                const pvTtc = pv * 1.20; // TTC Calc
+
+                resPV.innerText = pv.toFixed(2) + " €";
+                resPvTtc.innerText = pvTtc.toFixed(2) + " €"; // Show TTC
                 resVal.innerText = "0.00 €";
                 resCoef.innerText = "x 1.00";
                 return;
@@ -1380,15 +1391,18 @@
 
             if (margin >= 100) {
                 resPV.innerText = "Erreur";
+                resPvTtc.innerText = "-";
                 return;
             }
 
             // Formule Marge Commerciale : PV = PA / (1 - TauxMarge)
             const pv = pa / (1 - (margin / 100));
+            const pvTtc = pv * 1.20; // TTC Calc (20%)
             const val = pv - pa;
             const coef = pv / pa;
 
             resPV.innerText = pv.toFixed(2) + " €";
+            resPvTtc.innerText = pvTtc.toFixed(2) + " €"; // Show TTC
             resVal.innerText = "+" + val.toFixed(2) + " €";
             resCoef.innerText = "x " + coef.toFixed(2);
         }
